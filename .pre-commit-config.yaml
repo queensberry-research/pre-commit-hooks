@@ -1,78 +1,80 @@
 repos:
-  - hooks:
-      - args:
-          - --fix
-        id: ruff-check
-      - id: ruff-format
-    repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
-  - hooks:
-      - args:
-          - --upgrade
-          - --script=script.py
-        files: ^script\.py$
-        id: uv-lock
-    repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.18
-  - hooks:
-      - args:
-          - --option
-          - indent_tables=true
-          - --option
-          - indent_entries=true
-          - --option
-          - reorder_keys=true
-        id: taplo-format
-    repo: https://github.com/compwa/taplo-pre-commit
-    rev: v0.9.3
-  - hooks:
+  - repo: https://github.com/dycw/pre-commit-hook-nitpick
+    rev: 0.8.3
+    hooks:
       - args:
           - --description=Pre-commit hook to nitpick your project
           - --pre-commit--prettier
           - --pre-commit--ruff
           - --pre-commit--taplo
           - --pre-commit--uv
-          - --pre-commit--uv--script=script.py
           - --pyright
-          - --pyright--include=script.py
           - --pytest
-          - --pytest--test-paths=tests
-          - --python-version=3.13
+          - --python-version=3.12
           - --readme
           - --repo-name=pre-commit-hook-nitpick
           - --ruff
+          - --script=script.py
         id: nitpick
-    repo: https://github.com/dycw/pre-commit-hook-nitpick
-    rev: 0.5.3
-  - hooks:
+  - repo: https://gitea.main:3000/qrt-public/pre-commit-hook-nitpick
+    rev: 0.1.8
+    hooks:
+      - args:
+          - --gitea--push--tag
+        id: nitpick
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
       - id: check-executables-have-shebangs
       - id: check-merge-conflict
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: detect-private-key
       - id: end-of-file-fixer
-      - args:
+      - id: mixed-line-ending
+        args:
           - --fix=lf
-        id: mixed-line-ending
       - id: no-commit-to-branch
-      - args:
+      - id: pretty-format-json
+        args:
           - --autofix
-        id: pretty-format-json
       - id: trailing-whitespace
-    repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
-  - hooks:
-      - args:
-          - --gitea--push--tag
-        id: nitpick
-    repo: https://gitlab.main:3000/qrt-public/pre-commit-hook-nitpick
-    rev: 0.1.7
-  - hooks:
-      - entry: npx prettier --write
-        id: prettier
-        language: system
+  - repo: local
+    hooks:
+      - id: prettier
         name: prettier
+        entry: npx prettier --write
+        language: system
         types_or:
           - markdown
           - yaml
-    repo: local
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.10
+    hooks:
+      - id: ruff-check
+        args:
+          - --fix
+      - id: ruff-format
+  - repo: https://github.com/compwa/taplo-pre-commit
+    rev: v0.9.3
+    hooks:
+      - id: taplo-format
+        args:
+          - --option
+          - indent_tables=true
+          - --option
+          - indent_entries=true
+          - --option
+          - reorder_keys=true
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.9.21
+    hooks:
+      - id: uv-lock
+        files: ^script\.py$
+        args:
+          - --upgrade
+          - --resolution
+          - highest
+          - --prerelease
+          - disallow
+          - --script=script.py

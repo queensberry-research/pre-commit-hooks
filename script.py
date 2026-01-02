@@ -1,14 +1,15 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# requires-python = ">=3.13"
+# requires-python = ">=3.12"
 # dependencies = [
-#   "click >= 8.3.1, < 8.4",
-#   "dycw-utilities >= 0.171.1, < 0.172",
-#   "pytest-xdist >= 3.8.0, < 3.9",
-#   "pyyaml >= 6.0.3, < 6.1",
-#   "rich >= 14.2.0, < 14.3",
-#   "tomlkit >= 0.13.3, < 0.14",
-#   "typed-settings[attrs, click] >= 25.3.0, < 25.4",
+#   "click >=8.3.1, <8.4",
+#   "dycw-utilities >=0.175.36, <0.176",
+#   "rich >=14.2.0, <14.3",
+#   "ruamel-yaml >=0.19.0, <0.20",
+#   "tomlkit >=0.13.3, <0.14",
+#   "typed-settings[attrs, click] >=25.3.0, <25.4",
+#   "pyright",
+#   "pytest-xdist",
 # ]
 # ///
 from __future__ import annotations
