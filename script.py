@@ -3,10 +3,9 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "click >=8.3.1, <8.4",
+#   "dycw-conformalize >=0.11.4, <0.12",
 #   "dycw-utilities >=0.175.36, <0.176",
 #   "rich >=14.2.0, <14.3",
-#   "ruamel-yaml >=0.19.0, <0.20",
-#   "tomlkit >=0.13.3, <0.14",
 #   "typed-settings[attrs, click] >=25.3.0, <25.4",
 #   "pyright",
 #   "pytest-xdist",
@@ -14,176 +13,221 @@
 # ///
 from __future__ import annotations
 
-from contextlib import contextmanager
-from contextvars import ContextVar
 from logging import getLogger
-from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-import yaml
+import conformalize.logging
 from click import command
+from conformalize.lib import (
+    ensure_contains,
+    get_dict,
+    get_list,
+    run_action_pre_commit_dict,
+    run_action_publish_dict,
+    run_action_pyright_dict,
+    run_action_pytest_dict,
+    run_action_ruff_dict,
+    run_action_tag_dict,
+    yield_yaml_dict,
+)
+from conformalize.settings import LOADER
 from rich.pretty import pretty_repr
-from tomlkit.container import Container
-from tomlkit.items import AoT, Array, Table
-from typed_settings import click_options, option, settings
-from utilities.atomicwrites import writer
+from typed_settings import click_options, load_settings, option, settings
 from utilities.click import CONTEXT_SETTINGS
-from utilities.functions import ensure_class
 from utilities.logging import basic_config
+from utilities.os import is_pytest
+from utilities.text import strip_and_dedent
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
+    from collections.abc import MutableSet
+    from pathlib import Path
 
-    from tomlkit.container import Container
-    from utilities.types import PathLike
-
-
-type HasAppend = Array | list[Any]
-type HasSetDefault = Container | StrDict | Table
-type StrDict = dict[str, Any]
-_LOGGER = getLogger(__name__)
-_MODIFIED = ContextVar("modified", default=False)
+__version__ = "0.1.10"
+LOGGER = getLogger(__name__)
+UPDATE_CA_CERTIFICATES = {
+    "name": "Update CA certificates",
+    "run": "sudo update-ca-certificates",
+}
 
 
 @settings
 class Settings:
-    gitea__push__tag: bool = option(default=False, help="Set up 'push.yaml' with 'tag'")
-    gitea__push__pypi: bool = option(
-        default=False, help="Set up 'push.yaml' with 'pypi'"
+    gitea_host: str = option(default="gitea.main", help="Gitea host")
+    gitea__pull_request__pre_commit: bool = option(
+        default=False, help="Set up 'pull-request.yaml' pre-commit"
+    )
+    gitea__pull_request__pyright: bool = option(
+        default=False, help="Set up 'pull-request.yaml' pyright"
+    )
+    gitea__pull_request__pytest: bool = option(
+        default=False, help="Set up 'pull-request.yaml' pytest"
+    )
+    gitea__pull_request__ruff: bool = option(
+        default=False, help="Set up 'pull-request.yaml' ruff"
     )
     gitea__push__docker: bool = option(
         default=False, help="Set up 'push.yaml' with 'docker'"
     )
-    dry_run: bool = option(default=False, help="Dry run the CLI")
+    gitea__push__pypi: bool = option(
+        default=False, help="Set up 'push.yaml' with 'pypi'"
+    )
+    gitea__push__tag: bool = option(default=False, help="Set up 'push.yaml' with 'tag'")
+    pytest__timeout: int | None = option(
+        default=None, help="Set up 'pytest.toml' timeout"
+    )
+    python_version: str = option(default="3.13", help="Python version")
 
 
-_SETTINGS = Settings()
+SETTINGS = load_settings(Settings, [LOADER])
 
 
 @command(**CONTEXT_SETTINGS)
 @click_options(Settings, "app", show_envvars_in_help=True)
 def main(settings: Settings, /) -> None:
-    _LOGGER.info("Running with settings:\n%s", pretty_repr(settings))
-    if settings.dry_run:
-        _LOGGER.info("Dry run; exiting...")
+    if is_pytest():
         return
+    basic_config(obj=__name__)
+    basic_config(obj=conformalize.logging.LOGGER)
+    LOGGER.info(
+        strip_and_dedent("""
+            Running 'conformalize' (version %s) with settings:
+            %s
+        """),
+        __version__,
+        pretty_repr(settings),
+    )
+    modifications: set[Path] = set()
     if (
-        settings.gitea__push__tag
-        or settings.gitea__push__pypi
-        or settings.gitea__push__docker
+        settings.gitea__pull_request__pre_commit
+        or settings.gitea__pull_request__pyright
+        or settings.gitea__pull_request__pytest
+        or settings.gitea__pull_request__ruff
     ):
-        _add_github_push_yaml(
-            tag=settings.gitea__push__tag,
-            pypi=settings.gitea__push__pypi,
+        add_gitea_pull_request_yaml(
+            modifications=modifications,
+            pre_commit=settings.gitea__pull_request__pre_commit,
+            pyright=settings.gitea__pull_request__pyright,
+            pytest=settings.gitea__pull_request__pytest,
+            pytest__timeout=settings.pytest__timeout,
+            ruff=settings.gitea__pull_request__ruff,
+            python_version=settings.python_version,
+        )
+    if (
+        settings.gitea__push__docker
+        or settings.gitea__push__pypi
+        or settings.gitea__push__tag
+    ):
+        add_gitea_push_yaml(
+            modifications=modifications,
             docker=settings.gitea__push__docker,
+            pypi=settings.gitea__push__pypi,
+            tag=settings.gitea__push__tag,
+            gitea_host=settings.gitea_host,
         )
 
 
-def _add_github_push_yaml(
+def add_gitea_pull_request_yaml(
     *,
-    tag: bool = _SETTINGS.gitea__push__tag,
-    pypi: bool = _SETTINGS.gitea__push__pypi,
-    docker: bool = _SETTINGS.gitea__push__docker,
+    modifications: MutableSet[Path] | None = None,
+    pre_commit: bool = SETTINGS.gitea__pull_request__pre_commit,
+    pyright: bool = SETTINGS.gitea__pull_request__pyright,
+    pytest: bool = SETTINGS.gitea__pull_request__pytest,
+    pytest__timeout: int | None = SETTINGS.pytest__timeout,
+    ruff: bool = SETTINGS.gitea__pull_request__ruff,
+    python_version: str = SETTINGS.python_version,
 ) -> None:
-    with _yield_yaml_dict(".gitea/workflows/push.yaml") as dict_:
+    with yield_yaml_dict(
+        ".gitea/workflows/pull-request.yaml", modifications=modifications
+    ) as dict_:
+        dict_["name"] = "pull-request"
+        on = get_dict(dict_, "on")
+        pull_request = get_dict(on, "pull_request")
+        branches = get_list(pull_request, "branches")
+        ensure_contains(branches, "master")
+        schedule = get_list(on, "schedule")
+        ensure_contains(schedule, {"cron": "0 0 * * *"})
+        jobs = get_dict(dict_, "jobs")
+        if pre_commit:
+            pre_commit_dict = get_dict(jobs, "pre-commit")
+            pre_commit_dict["runs-on"] = "ubuntu-latest"
+            steps = get_list(pre_commit_dict, "steps")
+            ensure_contains(steps, UPDATE_CA_CERTIFICATES, run_action_pre_commit_dict())
+        if pyright:
+            pyright_dict = get_dict(jobs, "pyright")
+            pyright_dict["runs-on"] = "ubuntu-latest"
+            steps = get_list(pyright_dict, "steps")
+            ensure_contains(
+                steps,
+                UPDATE_CA_CERTIFICATES,
+                run_action_pyright_dict(python_version=python_version),
+            )
+        if pytest:
+            pytest_dict = get_dict(jobs, "pytest")
+            env = get_dict(pytest_dict, "env")
+            env["CI"] = "1"
+            pytest_dict["name"] = (
+                "pytest (${{matrix.os}}, ${{matrix.python-version}}, ${{matrix.resolution}})"
+            )
+            pytest_dict["runs-on"] = "${{matrix.os}}"
+            steps = get_list(pytest_dict, "steps")
+            ensure_contains(steps, UPDATE_CA_CERTIFICATES, run_action_pytest_dict())
+            strategy_dict = get_dict(pytest_dict, "strategy")
+            strategy_dict["fail-fast"] = False
+            matrix = get_dict(strategy_dict, "matrix")
+            os = get_list(matrix, "os")
+            ensure_contains(os, "macos-latest", "ubuntu-latest")
+            python_version_dict = get_list(matrix, "python-version")
+            ensure_contains(python_version_dict, "3.13", "3.14")
+            resolution = get_list(matrix, "resolution")
+            ensure_contains(resolution, "highest", "lowest-direct")
+            if pytest__timeout is not None:
+                pytest_dict["timeout-minutes"] = max(round(pytest__timeout / 60), 1)
+        if ruff:
+            ruff_dict = get_dict(jobs, "ruff")
+            ruff_dict["runs-on"] = "ubuntu-latest"
+            steps = get_list(ruff_dict, "steps")
+            ensure_contains(steps, UPDATE_CA_CERTIFICATES, run_action_ruff_dict())
+
+
+def add_gitea_push_yaml(
+    *,
+    modifications: MutableSet[Path] | None = None,
+    docker: bool = SETTINGS.gitea__push__docker,
+    pypi: bool = SETTINGS.gitea__push__pypi,
+    tag: bool = SETTINGS.gitea__push__tag,
+    gitea_host: str = SETTINGS.gitea_host,
+) -> None:
+    with yield_yaml_dict(
+        ".gitea/workflows/push.yaml", modifications=modifications
+    ) as dict_:
         dict_["name"] = "push"
-        on = _get_dict(dict_, "on")
-        push = _get_dict(on, "push")
-        branches = _get_list(push, "branches")
-        _ensure_contains(branches, "master")
-        jobs = _get_dict(dict_, "jobs")
-        if tag:
-            tag_dict = _get_dict(jobs, "tag")
-            tag_dict["runs-on"] = "ubuntu-latest"
-            steps = _get_list(tag_dict, "steps")
-            steps[:] = [
-                {
-                    "name": "Update CA certificates",
-                    "run": "sudo update-ca-certificates",
-                },
-                {"name": "Tag latest commit", "uses": "dycw/action-tag-commit@latest"},
-            ]
-        if pypi:
-            pypi_dict = _get_dict(jobs, "pypi")
-            pypi_dict["runs-on"] = "ubuntu-latest"
-            steps = _get_list(pypi_dict, "steps")
-            steps[:] = [
-                {
-                    "name": "Update CA certificates",
-                    "run": "sudo update-ca-certificates",
-                },
-                {
-                    "name": "Build Python package and upload distribution",
-                    "uses": "dycw/action-uv-publish@latest",
-                    "with": {
-                        "username": "qrt-bot",
-                        "password": "${{ secrets.ACTION_UV_PUBLISH_PASSWORD }}",
-                        "publish-url": "https://gitlab.main:3000/api/packages/qrt/pypi/",
-                        "native-tls": True,
-                    },
-                },
-            ]
+        on = get_dict(dict_, "on")
+        push = get_dict(on, "push")
+        branches = get_list(push, "branches")
+        ensure_contains(branches, "master")
+        jobs = get_dict(dict_, "jobs")
         if docker:
             raise NotImplementedError
-
-
-def _ensure_aot_contains(array: AoT, /, *tables: Table) -> None:
-    for table_ in tables:
-        if table_ not in array:
-            array.append(table_)
-
-
-def _ensure_contains(array: HasAppend, /, *objs: Any) -> None:
-    if isinstance(array, AoT):
-        msg = f"Use {_ensure_aot_contains.__name__!r} instead of {_ensure_contains.__name__!r}"
-        raise TypeError(msg)
-    for obj in objs:
-        if obj not in array:
-            array.append(obj)
-
-
-def _get_dict(container: HasSetDefault, key: str, /) -> StrDict:
-    return ensure_class(container.setdefault(key, {}), dict)
-
-
-def _get_list(container: HasSetDefault, key: str, /) -> list[Any]:
-    return ensure_class(container.setdefault(key, []), list)
-
-
-@contextmanager
-def _yield_write_context[T](
-    path: PathLike,
-    loads: Callable[[str], T],
-    get_default: Callable[[], T],
-    dumps: Callable[[T], str],
-    /,
-) -> Iterator[T]:
-    path = Path(path)
-
-    def run(verb: str, data: T, /) -> None:
-        _LOGGER.info("%s '%s'...", verb, path)
-        with writer(path, overwrite=True) as temp:
-            _ = temp.write_text(dumps(data))
-        _ = _MODIFIED.set(True)
-
-    try:
-        data = loads(path.read_text())
-    except FileNotFoundError:
-        yield (default := get_default())
-        run("Writing", default)
-    else:
-        yield data
-        current = loads(path.read_text())
-        if data != current:
-            run("Modifying", data)
-
-
-@contextmanager
-def _yield_yaml_dict(path: PathLike, /) -> Iterator[StrDict]:
-    with _yield_write_context(path, yaml.safe_load, dict, yaml.safe_dump) as dict_:
-        yield dict_
+        if tag:
+            tag_dict = get_dict(jobs, "tag")
+            tag_dict["runs-on"] = "ubuntu-latest"
+            steps = get_list(tag_dict, "steps")
+            ensure_contains(steps, UPDATE_CA_CERTIFICATES, run_action_tag_dict())
+        if pypi:
+            pypi_dict = get_dict(jobs, "pypi")
+            pypi_dict["runs-on"] = "ubuntu-latest"
+            steps = get_list(pypi_dict, "steps")
+            ensure_contains(
+                steps,
+                UPDATE_CA_CERTIFICATES,
+                run_action_publish_dict(
+                    username="qrt-bot",
+                    password="${{secrets.ACTION_UV_PUBLISH_PASSWORD}}",  # noqa: S106
+                    publish_url=f"https://{gitea_host}:3000/api/packages/qrt/pypi/",
+                    native_tls=True,
+                ),
+            )
 
 
 if __name__ == "__main__":
-    basic_config(obj=__name__)
     main()

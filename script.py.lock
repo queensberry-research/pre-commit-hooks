@@ -8,12 +8,11 @@ prerelease-mode = "disallow"
 [manifest]
 requirements = [
     { name = "click", specifier = ">=8.3.1,<8.4" },
+    { name = "dycw-conformalize", specifier = ">=0.11.4,<0.12" },
     { name = "dycw-utilities", specifier = ">=0.175.36,<0.176" },
     { name = "pyright" },
     { name = "pytest-xdist" },
     { name = "rich", specifier = ">=14.2.0,<14.3" },
-    { name = "ruamel-yaml", specifier = ">=0.19.0,<0.20" },
-    { name = "tomlkit", specifier = ">=0.13.3,<0.14" },
     { name = "typed-settings", extras = ["attrs", "click"], specifier = ">=25.3.0,<25.4" },
 ]
 
@@ -54,8 +53,26 @@ wheels = [
 ]
 
 [[package]]
+name = "dycw-conformalize"
+version = "0.11.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "dycw-utilities" },
+    { name = "inflect" },
+    { name = "rich" },
+    { name = "ruamel-yaml" },
+    { name = "tomlkit" },
+    { name = "typed-settings", extra = ["attrs", "click"] },
+    { name = "xdg-base-dirs" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6e/6b/790b1d26ce7d38ab24b87a35549c07c75aee048c814768c65e6c13cf2a73/dycw_conformalize-0.11.4-py3-none-any.whl", hash = "sha256:9f1bba6267d22849ffc91ce627bddedb2d9686863b5ba3365fa4d659a4614659", size = 15941, upload-time = "2026-01-03T06:00:48.895Z" },
+]
+
+[[package]]
 name = "dycw-utilities"
-version = "0.175.36"
+version = "0.175.38"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "atomicwrites" },
@@ -64,7 +81,7 @@ dependencies = [
     { name = "whenever" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e2/94/a13735cf2cc38132f4d00da69b052a915d60eae8c8ae886197eab50b9868/dycw_utilities-0.175.36-py3-none-any.whl", hash = "sha256:cc953958304cd5fafc9500bf25e2bf6fd250e67bbc36c8e62763ff524cdbf233", size = 205342, upload-time = "2026-01-02T06:26:33.599Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/a9/56a536e32392eb42d33ae3e48085072c47276304356b57809adc772a714b/dycw_utilities-0.175.38-py3-none-any.whl", hash = "sha256:8ce1ae95f8ee62d3ab5db8f38ae39b953cb1e81e0b984a456b81e6ee2890879b", size = 205397, upload-time = "2026-01-02T23:54:51.429Z" },
 ]
 
 [[package]]
@@ -74,6 +91,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bf/89/780e11f9588d9e7128a3f87788354c7946a9cbb1401ad38a48c4db9a4f07/execnet-2.1.2.tar.gz", hash = "sha256:63d83bfdd9a23e35b9c6a3261412324f964c2ec8dcd8d3c6916ee9373e0befcd", size = 166622, upload-time = "2025-11-12T09:56:37.75Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ab/84/02fc1827e8cdded4aa65baef11296a9bbe595c474f0d6d758af082d849fd/execnet-2.1.2-py3-none-any.whl", hash = "sha256:67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec", size = 40708, upload-time = "2025-11-12T09:56:36.333Z" },
+]
+
+[[package]]
+name = "inflect"
+version = "7.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "more-itertools" },
+    { name = "typeguard" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/c6/943357d44a21fd995723d07ccaddd78023eace03c1846049a2645d4324a3/inflect-7.5.0.tar.gz", hash = "sha256:faf19801c3742ed5a05a8ce388e0d8fe1a07f8d095c82201eb904f5d27ad571f", size = 73751, upload-time = "2024-12-28T17:11:18.897Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8a/eb/427ed2b20a38a4ee29f24dbe4ae2dafab198674fe9a85e3d6adf9e5f5f41/inflect-7.5.0-py3-none-any.whl", hash = "sha256:2aea70e5e70c35d8350b8097396ec155ffd68def678c7ff97f51aa69c1d92344", size = 35197, upload-time = "2024-12-28T17:11:15.931Z" },
 ]
 
 [[package]]
@@ -104,6 +134,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
+]
+
+[[package]]
+name = "more-itertools"
+version = "10.8.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ea/5d/38b681d3fce7a266dd9ab73c66959406d565b3e85f21d5e66e1181d93721/more_itertools-10.8.0.tar.gz", hash = "sha256:f638ddf8a1a0d134181275fb5d58b086ead7c6a72429ad725c67503f13ba30bd", size = 137431, upload-time = "2025-09-02T15:23:11.018Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/8e/469e5a4a2f5855992e425f3cb33804cc07bf18d48f2db061aec61ce50270/more_itertools-10.8.0-py3-none-any.whl", hash = "sha256:52d4362373dcf7c52546bc4af9a86ee7c4579df9a8dc268be0a2f949d376cc9b", size = 69667, upload-time = "2025-09-02T15:23:09.635Z" },
 ]
 
 [[package]]
@@ -199,21 +238,12 @@ wheels = [
 
 [[package]]
 name = "ruamel-yaml"
-version = "0.19.0"
+version = "0.19.1"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "ruamel-yaml-clibz", marker = "platform_python_implementation == 'CPython'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/5d/8a1de57b5a11245c61c906d422cd1e66b6778e134a1c68823a451be5759c/ruamel_yaml-0.19.0.tar.gz", hash = "sha256:ff19233e1eb3e9301e7a3d437847713e361a80faace167639327efbe8c0e5f95", size = 142095, upload-time = "2025-12-31T16:47:31.837Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c7/3b/ebda527b56beb90cb7652cb1c7e4f91f48649fbcd8d2eb2fb6e77cd3329b/ruamel_yaml-0.19.1.tar.gz", hash = "sha256:53eb66cd27849eff968ebf8f0bf61f46cdac2da1d1f3576dd4ccee9b25c31993", size = 142709, upload-time = "2026-01-02T16:50:31.84Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9b/3e/835d495068a4bb03419ce8c5464734ff6f3343df948e033cb5e5f81f7f08/ruamel_yaml-0.19.0-py3-none-any.whl", hash = "sha256:96ea8bafd9f3fdb0181ce3cc05e6ec02ce0a8788cbafa9b5a6e47c76fe26dfc6", size = 117777, upload-time = "2025-12-31T16:47:29.07Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/0c/51f6841f1d84f404f92463fc2b1ba0da357ca1e3db6b7fbda26956c3b82a/ruamel_yaml-0.19.1-py3-none-any.whl", hash = "sha256:27592957fedf6e0b62f281e96effd28043345e0e66001f97683aa9a40c667c93", size = 118102, upload-time = "2026-01-02T16:50:29.201Z" },
 ]
-
-[[package]]
-name = "ruamel-yaml-clibz"
-version = "0.3.7"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/cb/73/2a9857a017f8ee260c683d8155634f0e3ca57964da2c3055b02822d582cd/ruamel_yaml_clibz-0.3.7.tar.gz", hash = "sha256:2be85214793cfc787eb12380fa3226e10cd7727b24551c3067c173d66c9bedd9", size = 231233, upload-time = "2026-01-02T14:52:41.734Z" }
 
 [[package]]
 name = "tomlkit"
@@ -239,6 +269,18 @@ attrs = [
 ]
 click = [
     { name = "click" },
+]
+
+[[package]]
+name = "typeguard"
+version = "4.4.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c7/68/71c1a15b5f65f40e91b65da23b8224dad41349894535a97f63a52e462196/typeguard-4.4.4.tar.gz", hash = "sha256:3a7fd2dffb705d4d0efaed4306a704c89b9dee850b688f060a8b1615a79e5f74", size = 75203, upload-time = "2025-06-18T09:56:07.624Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/a9/e3aee762739c1d7528da1c3e06d518503f8b6c439c35549b53735ba52ead/typeguard-4.4.4-py3-none-any.whl", hash = "sha256:b5f562281b6bfa1f5492470464730ef001646128b180769880468bd84b68b09e", size = 34874, upload-time = "2025-06-18T09:56:05.999Z" },
 ]
 
 [[package]]
@@ -348,4 +390,13 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/bc/20/0e62de9f52ff5ed9d9af18446e7f9c2ae8fc1f67cf71dc5117f0f151402c/whenever-0.9.4-cp314-cp314t-win32.whl", hash = "sha256:376d3e3f2cb805dc5d889caeea15d4ee6401080ba78b97fd378b86850a2d5454", size = 420839, upload-time = "2025-12-18T20:46:29.473Z" },
     { url = "https://files.pythonhosted.org/packages/3a/68/52996f6fa0595fcfb84d6695df15ff9d80a86609f3034c6a17829a8085e6/whenever-0.9.4-cp314-cp314t-win_amd64.whl", hash = "sha256:f603214f8eb33f497262c0ae819106c0c76cf1dc39b9d1e8ff408265c98275ba", size = 437159, upload-time = "2025-12-18T20:46:38.262Z" },
     { url = "https://files.pythonhosted.org/packages/9f/e7/84381106a701c812652405f4d74093f6da7c2748a639084fd2c092cd2c78/whenever-0.9.4-py3-none-any.whl", hash = "sha256:b373ece2ad5cf4667848af3057aefa8fbb443d20e721cf4259602cc801f9d176", size = 64872, upload-time = "2025-12-18T20:46:40.888Z" },
+]
+
+[[package]]
+name = "xdg-base-dirs"
+version = "6.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/d0/bbe05a15347538aaf9fa5b51ac3b97075dfb834931fcb77d81fbdb69e8f6/xdg_base_dirs-6.0.2.tar.gz", hash = "sha256:950504e14d27cf3c9cb37744680a43bf0ac42efefc4ef4acf98dc736cab2bced", size = 4085, upload-time = "2024-10-19T14:35:08.114Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fc/03/030b47fd46b60fc87af548e57ff59c2ca84b2a1dadbe721bb0ce33896b2e/xdg_base_dirs-6.0.2-py3-none-any.whl", hash = "sha256:3c01d1b758ed4ace150ac960ac0bd13ce4542b9e2cdf01312dcda5012cfebabe", size = 4747, upload-time = "2024-10-19T14:35:05.931Z" },
 ]

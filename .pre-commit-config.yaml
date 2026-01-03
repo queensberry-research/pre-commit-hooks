@@ -1,9 +1,12 @@
 repos:
-  - repo: https://github.com/dycw/pre-commit-hook-nitpick
-    rev: 0.8.3
+  - repo: https://github.com/dycw/conformalize
+    rev: 0.11.3
     hooks:
       - args:
-          - --description=Pre-commit hook to nitpick your project
+          - --description=Project conformalizer
+          - --envrc
+          - --envrc--uv
+          - --pre-commit--dycw
           - --pre-commit--prettier
           - --pre-commit--ruff
           - --pre-commit--taplo
@@ -15,13 +18,13 @@ repos:
           - --repo-name=pre-commit-hook-nitpick
           - --ruff
           - --script=script.py
-        id: nitpick
-  - repo: https://gitea.main:3000/qrt-public/pre-commit-hook-nitpick
-    rev: 0.1.8
-    hooks:
-      - args:
-          - --gitea--push--tag
-        id: nitpick
+        id: conformalize
+        # - repo: https://gitea.main:3000/qrt-public/pre-commit-hook-nitpick
+        #   rev: 0.1.9
+        #   hooks:
+        #     - args:
+        #         - --gitea--push--tag
+        #       id: nitpick
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -39,6 +42,11 @@ repos:
         args:
           - --autofix
       - id: trailing-whitespace
+  - repo: https://github.com/dycw/actions
+    rev: 0.3.31
+    hooks:
+      - id: format-requirements
+      - id: replace-sequence-strs
   - repo: local
     hooks:
       - id: prettier
