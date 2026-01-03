@@ -1,3 +1,3 @@
-# `pre-commit-hook-nitpick`
+# `conformalize`
 
 Project conformalizer

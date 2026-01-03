@@ -42,7 +42,7 @@ if TYPE_CHECKING:
     from collections.abc import MutableSet
     from pathlib import Path
 
-__version__ = "0.1.10"
+__version__ = "0.1.11"
 LOGGER = getLogger(__name__)
 UPDATE_CA_CERTIFICATES = {
     "name": "Update CA certificates",

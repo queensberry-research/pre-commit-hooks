@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/conformalize
-    rev: 0.11.3
+    rev: 0.11.4
     hooks:
       - args:
           - --description=Project conformalizer
@@ -15,7 +15,7 @@ repos:
           - --pytest
           - --python-version=3.12
           - --readme
-          - --repo-name=pre-commit-hook-nitpick
+          - --repo-name=conformalize
           - --ruff
           - --script=script.py
         id: conformalize

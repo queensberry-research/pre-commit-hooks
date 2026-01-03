@@ -1,7 +1,7 @@
-- id: nitpick
-  name: nitpick
+- id: conformalize
+  name: conformalize
   entry: ./script.py
   language: unsupported_script
   always_run: true
   pass_filenames: false
-  description: Nitpick your repo
+  description: Project conformalizer
