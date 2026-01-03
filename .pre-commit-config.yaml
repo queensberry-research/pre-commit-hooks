@@ -20,7 +20,7 @@ repos:
           - --script=script.py
         id: conformalize
   - repo: https://gitea.main:3000/qrt-public/conformalize
-    rev: 0.1.17
+    rev: 0.1.20
     hooks:
       - args:
           - --gitea-host=gitea.main
