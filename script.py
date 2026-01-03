@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING
 import conformalize.logging
 from click import command
 from conformalize.lib import (
+    StrDict,
     ensure_contains,
     get_dict,
     get_list,
@@ -42,12 +43,9 @@ if TYPE_CHECKING:
     from collections.abc import MutableSet
     from pathlib import Path
 
-__version__ = "0.1.12"
+
+__version__ = "0.1.13"
 LOGGER = getLogger(__name__)
-UPDATE_CA_CERTIFICATES = {
-    "name": "Update CA certificates",
-    "run": "sudo update-ca-certificates",
-}
 
 
 @settings
@@ -152,7 +150,9 @@ def add_gitea_pull_request_yaml(
             pre_commit_dict["runs-on"] = "ubuntu-latest"
             steps = get_list(pre_commit_dict, "steps")
             ensure_contains(
-                steps, UPDATE_CA_CERTIFICATES.copy(), run_action_pre_commit_dict()
+                steps,
+                update_ca_certificates("pre-commit"),
+                run_action_pre_commit_dict(),
             )
         if pyright:
             pyright_dict = get_dict(jobs, "pyright")
@@ -160,7 +160,7 @@ def add_gitea_pull_request_yaml(
             steps = get_list(pyright_dict, "steps")
             ensure_contains(
                 steps,
-                UPDATE_CA_CERTIFICATES.copy(),
+                update_ca_certificates("pyright"),
                 run_action_pyright_dict(python_version=python_version),
             )
         if pytest:
@@ -173,7 +173,7 @@ def add_gitea_pull_request_yaml(
             pytest_dict["runs-on"] = "${{matrix.os}}"
             steps = get_list(pytest_dict, "steps")
             ensure_contains(
-                steps, UPDATE_CA_CERTIFICATES.copy(), run_action_pytest_dict()
+                steps, update_ca_certificates("pytest"), run_action_pytest_dict()
             )
             strategy_dict = get_dict(pytest_dict, "strategy")
             strategy_dict["fail-fast"] = False
@@ -191,7 +191,7 @@ def add_gitea_pull_request_yaml(
             ruff_dict["runs-on"] = "ubuntu-latest"
             steps = get_list(ruff_dict, "steps")
             ensure_contains(
-                steps, UPDATE_CA_CERTIFICATES.copy(), run_action_ruff_dict()
+                steps, update_ca_certificates("ruff"), run_action_ruff_dict()
             )
 
 
@@ -218,14 +218,14 @@ def add_gitea_push_yaml(
             tag_dict = get_dict(jobs, "tag")
             tag_dict["runs-on"] = "ubuntu-latest"
             steps = get_list(tag_dict, "steps")
-            ensure_contains(steps, UPDATE_CA_CERTIFICATES.copy(), run_action_tag_dict())
+            ensure_contains(steps, update_ca_certificates("tag"), run_action_tag_dict())
         if pypi:
             pypi_dict = get_dict(jobs, "pypi")
             pypi_dict["runs-on"] = "ubuntu-latest"
             steps = get_list(pypi_dict, "steps")
             ensure_contains(
                 steps,
-                UPDATE_CA_CERTIFICATES.copy(),
+                update_ca_certificates("pypi"),
                 run_action_publish_dict(
                     username="qrt-bot",
                     password="${{secrets.ACTION_UV_PUBLISH_PASSWORD}}",  # noqa: S106
@@ -233,6 +233,13 @@ def add_gitea_push_yaml(
                     native_tls=True,
                 ),
             )
+
+
+def update_ca_certificates(desc: str, /) -> StrDict:
+    return {
+        "name": f"Update CA certificates ({desc})",
+        "run": "sudo update-ca-certificates",
+    }
 
 
 if __name__ == "__main__":
