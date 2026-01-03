@@ -3,7 +3,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "click >=8.3.1, <8.4",
-#   "dycw-conformalize >=0.11.10, <0.12",
+#   "dycw-conformalize >=0.11.12, <0.12",
 #   "dycw-utilities >=0.175.36, <0.176",
 #   "rich >=14.2.0, <14.3",
 #   "typed-settings[attrs, click] >=25.3.0, <25.4",
@@ -45,7 +45,7 @@ if TYPE_CHECKING:
     from conformalize.types import StrDict
 
 
-__version__ = "0.1.15"
+__version__ = "0.1.16"
 LOGGER = getLogger(__name__)
 SECRETS_ACTION_TOKEN = "${{secrets.ACTION_TOKEN}}"  # noqa: S105
 
@@ -185,7 +185,7 @@ def add_gitea_pull_request_yaml(
             strategy_dict["fail-fast"] = False
             matrix = get_dict(strategy_dict, "matrix")
             os = get_list(matrix, "os")
-            ensure_contains(os, "macos-latest", "ubuntu-latest")
+            ensure_contains(os, "ubuntu-latest")
             python_version_dict = get_list(matrix, "python-version")
             ensure_contains(python_version_dict, "3.13", "3.14")
             resolution = get_list(matrix, "resolution")
