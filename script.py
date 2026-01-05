@@ -2,11 +2,12 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#   "click >=8.3.1, <8.4",
-#   "dycw-conformalize >=0.12.0, <0.13",
-#   "dycw-utilities >=0.175.36, <0.176",
-#   "rich >=14.2.0, <14.3",
-#   "typed-settings[attrs, click] >=25.3.0, <25.4",
+#   "click >=8.3.1, <9",
+#   "dycw-actions>=0.3.39, <1",
+#   "dycw-conformalize >=0.13.3, <1",
+#   "dycw-utilities >=0.175.36, <1",
+#   "rich >=14.2.0, <15",
+#   "typed-settings[attrs, click] >=25.3.0, <26",
 #   "pyright >=1.1.407, <2",
 #   "pytest-xdist >=3.8.0, <4",
 # ]
@@ -17,6 +18,14 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 import conformalize.logging
+from actions.conformalize.dicts import (
+    run_action_pre_commit_dict,
+    run_action_publish_dict,
+    run_action_pyright_dict,
+    run_action_pytest_dict,
+    run_action_ruff_dict,
+    run_action_tag_dict,
+)
 from click import command
 from conformalize.constants import PYPROJECT_TOML
 from conformalize.lib import (
@@ -26,18 +35,13 @@ from conformalize.lib import (
     get_dict,
     get_list,
     get_table,
-    run_action_pre_commit_dict,
-    run_action_publish_dict,
-    run_action_pyright_dict,
-    run_action_pytest_dict,
-    run_action_ruff_dict,
-    run_action_tag_dict,
     yield_python_versions,
     yield_toml_doc,
     yield_yaml_dict,
 )
 from conformalize.settings import LOADER
 from rich.pretty import pretty_repr
+from ruamel.yaml.scalarstring import LiteralScalarString
 from tomlkit import table
 from typed_settings import (
     Secret,
@@ -60,7 +64,7 @@ if TYPE_CHECKING:
     from tomlkit.items import Table
 
 
-__version__ = "0.1.26"
+__version__ = "0.1.27"
 LOGGER = getLogger(__name__)
 API_PACKAGES_QRT_PYPI = "api/packages/qrt/pypi"
 SECRETS_ACTION_TOKEN = "${{secrets.ACTION_TOKEN}}"  # noqa: S105
@@ -202,7 +206,16 @@ def add_gitea_pull_request_yaml(
                 steps,
                 random_sleep("pre-commit"),
                 update_ca_certificates("pre-commit"),
-                run_action_pre_commit_dict(token_uv=SECRETS_ACTION_TOKEN),
+                run_action_pre_commit_dict(
+                    token_uv=SECRETS_ACTION_TOKEN,
+                    repos=LiteralScalarString(
+                        strip_and_dedent("""
+                            dycw/conformalize
+                            qrt-public/conformalize
+                            pre-commit/pre-commit-hooks
+                        """)
+                    ),
+                ),
             )
         if pyright:
             pyright_dict = get_dict(jobs, "pyright")
@@ -213,9 +226,10 @@ def add_gitea_pull_request_yaml(
                 random_sleep("pyright"),
                 update_ca_certificates("pyright"),
                 run_action_pyright_dict(
-                    python_version=python_version,
-                    script=script,
                     token_uv=SECRETS_ACTION_TOKEN,
+                    python_version=python_version,
+                    native_tls=True,
+                    with_requirements=script,
                 ),
             )
         if pytest:
@@ -231,7 +245,13 @@ def add_gitea_pull_request_yaml(
                 steps,
                 random_sleep("pytest"),
                 update_ca_certificates("pytest"),
-                run_action_pytest_dict(script=script, token_uv=SECRETS_ACTION_TOKEN),
+                run_action_pytest_dict(
+                    token_uv=SECRETS_ACTION_TOKEN,
+                    python_version="${{matrix.python-version}}",
+                    resolution="${{matrix.resolution}}",
+                    native_tls=True,
+                    with_requirements=script,
+                ),
             )
             strategy_dict = get_dict(pytest_dict, "strategy")
             strategy_dict["fail-fast"] = False

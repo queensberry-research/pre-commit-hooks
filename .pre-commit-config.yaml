@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/conformalize
-    rev: 0.13.1
+    rev: 0.13.3
     hooks:
       - args:
           - --description=Project conformalizer
@@ -20,7 +20,7 @@ repos:
           - --script=script.py
         id: conformalize
   - repo: https://gitea.main:3000/qrt-public/conformalize
-    rev: 0.1.25
+    rev: 0.1.26
     hooks:
       - args:
           - --gitea-host=gitea.main
@@ -50,7 +50,7 @@ repos:
           - --autofix
       - id: trailing-whitespace
   - repo: https://github.com/dycw/actions
-    rev: 0.3.32
+    rev: 0.3.39
     hooks:
       - id: format-requirements
       - id: replace-sequence-strs
