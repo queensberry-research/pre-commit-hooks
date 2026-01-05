@@ -3,8 +3,8 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "click >=8.3.1, <9",
-#   "dycw-actions>=0.3.39, <1",
-#   "dycw-conformalize >=0.13.3, <1",
+#   "dycw-actions>=0.3.40, <1",
+#   "dycw-conformalize >=0.13.6, <1",
 #   "dycw-utilities >=0.175.36, <1",
 #   "rich >=14.2.0, <15",
 #   "typed-settings[attrs, click] >=25.3.0, <26",
@@ -64,7 +64,7 @@ if TYPE_CHECKING:
     from tomlkit.items import Table
 
 
-__version__ = "0.1.27"
+__version__ = "0.1.28"
 LOGGER = getLogger(__name__)
 API_PACKAGES_QRT_PYPI = "api/packages/qrt/pypi"
 SECRETS_ACTION_TOKEN = "${{secrets.ACTION_TOKEN}}"  # noqa: S105
@@ -83,6 +83,9 @@ class Settings:
     )
     gitea__pull_request__pre_commit: bool = option(
         default=False, help="Set up 'pull-request.yaml' pre-commit"
+    )
+    gitea__pull_request__pre_commit__submodules: str | None = option(
+        default=None, help="Set up 'pull-request.yaml' pre-commit with submodules"
     )
     gitea__pull_request__pyright: bool = option(
         default=False, help="Set up 'pull-request.yaml' pyright"
@@ -138,6 +141,7 @@ def main(settings: Settings, /) -> None:
     modifications: set[Path] = set()
     if (
         settings.gitea__pull_request__pre_commit
+        or settings.gitea__pull_request__pre_commit__submodules
         or settings.gitea__pull_request__pyright
         or settings.gitea__pull_request__pytest
         or settings.gitea__pull_request__ruff
@@ -145,6 +149,7 @@ def main(settings: Settings, /) -> None:
         add_gitea_pull_request_yaml(
             modifications=modifications,
             pre_commit=settings.gitea__pull_request__pre_commit,
+            pre_commit__submodules=settings.gitea__pull_request__pre_commit__submodules,
             pyright=settings.gitea__pull_request__pyright,
             pytest=settings.gitea__pull_request__pytest,
             pytest__timeout=settings.pytest__timeout,
@@ -180,6 +185,8 @@ def add_gitea_pull_request_yaml(
     *,
     modifications: MutableSet[Path] | None = None,
     pre_commit: bool = SETTINGS.gitea__pull_request__pre_commit,
+    pre_commit__submodules: str
+    | None = SETTINGS.gitea__pull_request__pre_commit__submodules,
     pyright: bool = SETTINGS.gitea__pull_request__pyright,
     pytest: bool = SETTINGS.gitea__pull_request__pytest,
     pytest__timeout: int | None = SETTINGS.pytest__timeout,
@@ -198,7 +205,7 @@ def add_gitea_pull_request_yaml(
         schedule = get_list(on, "schedule")
         ensure_contains(schedule, {"cron": "0 0 * * *"})
         jobs = get_dict(dict_, "jobs")
-        if pre_commit:
+        if pre_commit or pre_commit__submodules:
             pre_commit_dict = get_dict(jobs, "pre-commit")
             pre_commit_dict["runs-on"] = "ubuntu-latest"
             steps = get_list(pre_commit_dict, "steps")
@@ -208,6 +215,7 @@ def add_gitea_pull_request_yaml(
                 update_ca_certificates("pre-commit"),
                 run_action_pre_commit_dict(
                     token_uv=SECRETS_ACTION_TOKEN,
+                    submodules=pre_commit__submodules,
                     repos=LiteralScalarString(
                         strip_and_dedent("""
                             dycw/conformalize

@@ -12,4 +12,7 @@ jobs:
       - name: Tag latest commit
         uses: dycw/action-tag@latest
         with:
+          token-checkout: ${{github.token}}
           token-uv: ${{secrets.ACTION_TOKEN}}
+          user-name: github-actions-bot
+          user-email: noreply@github.com

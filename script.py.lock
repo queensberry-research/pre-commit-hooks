@@ -13,8 +13,8 @@ prerelease-mode = "disallow"
 [manifest]
 requirements = [
     { name = "click", specifier = ">=8.3.1,<9" },
-    { name = "dycw-actions", specifier = ">=0.3.39,<1" },
-    { name = "dycw-conformalize", specifier = ">=0.13.3,<1" },
+    { name = "dycw-actions", specifier = ">=0.3.40,<1" },
+    { name = "dycw-conformalize", specifier = ">=0.13.6,<1" },
     { name = "dycw-utilities", specifier = ">=0.175.36,<1" },
     { name = "pyright", specifier = ">=1.1.407,<2" },
     { name = "pytest-xdist", specifier = ">=3.8.0,<4" },
@@ -60,7 +60,7 @@ wheels = [
 
 [[package]]
 name = "dycw-actions"
-version = "0.3.39"
+version = "0.3.40"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -73,12 +73,12 @@ dependencies = [
     { name = "typed-settings", extra = ["attrs", "click"] },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/1e/e001b1588309ae06e892fe9c1851fa9e0c32c2745bf8192261c50c2029bf/dycw_actions-0.3.39-py3-none-any.whl", hash = "sha256:a16fac03fa3157cf611192c0f2029d29508dee18f37ff1f6f73bfc650731ecb0", size = 19237, upload-time = "2026-01-05T03:22:30.147Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/f2/c77e9b30fe8126c5dbbe5ee183c05de89f19d14b6eded3c7f24e2290b003/dycw_actions-0.3.40-py3-none-any.whl", hash = "sha256:513288f48f495a01ebe3b9c58a175a00afe07e4e00718ad2cf22330acc21f519", size = 19265, upload-time = "2026-01-05T05:34:42.155Z" },
 ]
 
 [[package]]
 name = "dycw-conformalize"
-version = "0.13.3"
+version = "0.13.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -92,7 +92,7 @@ dependencies = [
     { name = "xdg-base-dirs" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/24/2b/809417389fc0c62a64e0b42c5982df503662f9da456aa9e8e0ac441c9d1d/dycw_conformalize-0.13.3-py3-none-any.whl", hash = "sha256:641bbf07d8c0ab85f7d8670bedbd98fb766cdd3515d70fa619bc3ab9cbc076bc", size = 15541, upload-time = "2026-01-05T02:51:08.391Z" },
+    { url = "https://files.pythonhosted.org/packages/90/89/47d37cf693c6ac745953bb8f79269727ecd09fcc29742777cc40165d421c/dycw_conformalize-0.13.6-py3-none-any.whl", hash = "sha256:6ba38c7eabd151dfabf80e27788132a4acc5554dca91f843a0fb0e73db4504bd", size = 18013, upload-time = "2026-01-05T04:36:25.875Z" },
 ]
 
 [[package]]
