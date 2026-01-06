@@ -3,7 +3,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "click >=8.3.1, <9",
-#   "dycw-actions>=0.3.40, <1",
+#   "dycw-actions>=0.3.42, <1",
 #   "dycw-conformalize >=0.13.6, <1",
 #   "dycw-utilities >=0.175.36, <1",
 #   "rich >=14.2.0, <15",
@@ -64,7 +64,7 @@ if TYPE_CHECKING:
     from tomlkit.items import Table
 
 
-__version__ = "0.1.31"
+__version__ = "0.1.32"
 LOGGER = getLogger(__name__)
 API_PACKAGES_QRT_PYPI = "api/packages/qrt/pypi"
 SECRETS_ACTION_TOKEN = "${{secrets.ACTION_TOKEN}}"  # noqa: S105
@@ -92,6 +92,9 @@ class Settings:
     )
     gitea__pull_request__pytest: bool = option(
         default=False, help="Set up 'pull-request.yaml' pytest"
+    )
+    gitea__pull_request__pytest__sops_and_age: bool = option(
+        default=False, help="Set up 'pull-request.yaml' pytest sops/age"
     )
     gitea__pull_request__ruff: bool = option(
         default=False, help="Set up 'pull-request.yaml' ruff"
@@ -144,6 +147,7 @@ def main(settings: Settings, /) -> None:
         or settings.gitea__pull_request__pre_commit__submodules
         or settings.gitea__pull_request__pyright
         or settings.gitea__pull_request__pytest
+        or settings.gitea__pull_request__pytest__sops_and_age
         or settings.gitea__pull_request__ruff
     ):
         add_gitea_pull_request_yaml(
@@ -152,6 +156,7 @@ def main(settings: Settings, /) -> None:
             pre_commit__submodules=settings.gitea__pull_request__pre_commit__submodules,
             pyright=settings.gitea__pull_request__pyright,
             pytest=settings.gitea__pull_request__pytest,
+            pytest__sops_and_age=settings.gitea__pull_request__pytest__sops_and_age,
             pytest__timeout=settings.pytest__timeout,
             ruff=settings.gitea__pull_request__ruff,
             python_version=settings.python_version,
@@ -189,6 +194,7 @@ def add_gitea_pull_request_yaml(
     | None = SETTINGS.gitea__pull_request__pre_commit__submodules,
     pyright: bool = SETTINGS.gitea__pull_request__pyright,
     pytest: bool = SETTINGS.gitea__pull_request__pytest,
+    pytest__sops_and_age: bool = SETTINGS.gitea__pull_request__pytest__sops_and_age,
     pytest__timeout: int | None = SETTINGS.pytest__timeout,
     ruff: bool = SETTINGS.gitea__pull_request__ruff,
     python_version: str = SETTINGS.python_version,
@@ -240,7 +246,7 @@ def add_gitea_pull_request_yaml(
                     with_requirements=script,
                 ),
             )
-        if pytest:
+        if pytest or pytest__sops_and_age:
             pytest_dict = get_dict(jobs, "pytest")
             env = get_dict(pytest_dict, "env")
             env["CI"] = "1"
@@ -256,6 +262,11 @@ def add_gitea_pull_request_yaml(
                 run_action_pytest_dict(
                     token_uv=SECRETS_ACTION_TOKEN,
                     python_version="${{matrix.python-version}}",
+                    sops_age_key="${{secrets.SOPS_AGE_KEY}}"
+                    if pytest__sops_and_age
+                    else None,
+                    token_sops=SECRETS_ACTION_TOKEN,
+                    token_age=SECRETS_ACTION_TOKEN,
                     resolution="${{matrix.resolution}}",
                     native_tls=True,
                     with_requirements=script,

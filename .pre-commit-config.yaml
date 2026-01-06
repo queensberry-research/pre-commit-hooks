@@ -20,7 +20,7 @@ repos:
           - --script=script.py
         id: conformalize
   - repo: https://gitea.main:3000/qrt-public/conformalize
-    rev: 0.1.30
+    rev: 0.1.31
     hooks:
       - args:
           - --gitea-host=gitea.main
@@ -50,7 +50,7 @@ repos:
           - --autofix
       - id: trailing-whitespace
   - repo: https://github.com/dycw/actions
-    rev: 0.3.41
+    rev: 0.3.42
     hooks:
       - id: format-requirements
       - id: replace-sequence-strs
