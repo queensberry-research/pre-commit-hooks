@@ -13,7 +13,7 @@ prerelease-mode = "disallow"
 [manifest]
 requirements = [
     { name = "click", specifier = ">=8.3.1,<9" },
-    { name = "dycw-actions", specifier = ">=0.8.10,<1" },
+    { name = "dycw-actions", specifier = ">=0.10.2,<1" },
     { name = "dycw-utilities", specifier = ">=0.179.1,<1" },
     { name = "pyright", specifier = ">=1.1.407,<2" },
     { name = "pytest-xdist", specifier = ">=3.8.0,<4" },
@@ -134,7 +134,7 @@ wheels = [
 
 [[package]]
 name = "dycw-actions"
-version = "0.9.0"
+version = "0.10.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -153,7 +153,7 @@ dependencies = [
     { name = "xdg-base-dirs" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/81/38/aceed43f93cb37b5546568daa1583a57febacb65d2e4ce7439b1f133f7b9/dycw_actions-0.9.0-py3-none-any.whl", hash = "sha256:ad763c123c97e336a21479622220166cc33d6b10a9d78782206166fcb109c63c", size = 62917, upload-time = "2026-01-09T06:16:02.987Z" },
+    { url = "https://files.pythonhosted.org/packages/eb/16/93d1e6cdff60de5aa1cda0b687b89eb7434af77dc9ccdd925a3f733c2258/dycw_actions-0.10.2-py3-none-any.whl", hash = "sha256:8720767441826dcf9942d47c080796ecb4feb10dbd1a8856095be6d1c47559f6", size = 62957, upload-time = "2026-01-09T07:05:36.712Z" },
 ]
 
 [[package]]

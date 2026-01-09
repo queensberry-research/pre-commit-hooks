@@ -2,13 +2,13 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#   "click >=8.3.1, <9",
-#   "dycw-actions>=0.8.10,<1",
-#   "dycw-utilities >=0.179.1, <1",
-#   "rich >=14.2.0, <15",
-#   "typed-settings[attrs, click] >=25.3.0, <26",
-#   "pyright >=1.1.407, <2",
-#   "pytest-xdist >=3.8.0, <4",
+#   "click>=8.3.1, <9",
+#   "dycw-actions>=0.10.2,<1",
+#   "dycw-utilities>=0.179.1, <1",
+#   "rich>=14.2.0, <15",
+#   "typed-settings[attrs,click]>=25.3.0, <26",
+#   "pyright>=1.1.407, <2",
+#   "pytest-xdist>=3.8.0, <4",
 # ]
 # ///
 from __future__ import annotations
@@ -52,14 +52,17 @@ if TYPE_CHECKING:
     from tomlkit.items import Table
 
 
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 LOGGER = getLogger(__name__)
 API_PACKAGES_QRT_PYPI = "api/packages/qrt/pypi"
-SECRETS_ACTION_TOKEN = "${{secrets.ACTION_TOKEN}}"  # noqa: S105
 
 
 @settings
 class Settings:
+    ci__token_github: Secret[str] | None = secret(
+        default=Secret("${{secrets.ACTION_TOKEN}}"),
+        help="Set up CI with this GitHub token",
+    )
     ci__pull_request__pre_commit: bool = option(
         default=False, help="Set up 'pull-request.yaml' pre-commit"
     )
@@ -79,20 +82,26 @@ class Settings:
     ci__pull_request__pytest__sops_and_age: bool = option(
         default=False, help="Set up 'pull-request.yaml' pytest sops/age"
     )
+    ci__pull_request__pytest__sops_age_key: Secret[str] | None = secret(
+        default=Secret("${{secrets.SOPS_AGE_KEY}}"),
+        help="Set up CI 'pull-request.yaml' pytest with this 'age' key for 'sops'",
+    )
     ci__pull_request__ruff: bool = option(
         default=False, help="Set up 'pull-request.yaml' ruff"
     )
     ci__push__pypi: bool = option(default=False, help="Set up 'push.yaml' with 'pypi'")
-    ci__push__publish__username: str = option(
-        default="qrt-bot", help="Set up CI 'push.yaml' publishing with this username"
-    )
-    ci__push__publish__password: Secret[str] = secret(
-        default=Secret("e43d1df41a3ecf96e4adbaf04e98cfaf094d253e"),
-        help="Set up CI 'push.yaml' publishing with this password",
-    )
     ci__push__tag: bool = option(default=False, help="Set up 'push.yaml' tagging")
     gitea_host: str = option(default="gitea.main", help="Gitea host")
     gitea_port: int = option(default=3000, help="Gitea port")
+    pypi__username: str = option(default="qrt-bot", help="PyPI user name")
+    pypi__read_token: Secret[str] = secret(
+        default=Secret("e43d1df41a3ecf96e4adbaf04e98cfaf094d253e"),
+        help="PyPI read-only token",
+    )
+    pypi__read_write_token: Secret[str] = secret(
+        default=Secret("${{secrets.ACTION_UV_PUBLISH_PASSWORD}}"),
+        help="PyPI read/write token",
+    )
     pyproject: bool = option(default=False, help="Set up 'pyproject.toml'")
     pytest__timeout: int | None = option(
         default=None, help="Set up 'pytest.toml' timeout"
@@ -152,7 +161,7 @@ def main(settings: Settings, /) -> None:
             pyright=settings.ci__pull_request__pyright,
             pytest__ubuntu=settings.ci__pull_request__pytest,
             pytest__all_versions=settings.ci__pull_request__pytest__all_versions,
-            pytest__sops_age_key="${{secrets.SOPS_AGE_KEY}}"
+            pytest__sops_age_key=settings.ci__pull_request__pytest__sops_age_key
             if settings.ci__pull_request__pytest__sops_and_age
             else None,
             pytest__timeout=settings.pytest__timeout,
@@ -160,7 +169,7 @@ def main(settings: Settings, /) -> None:
             repo_name=settings.repo_name,
             ruff=settings.ci__pull_request__ruff,
             script=settings.script,
-            token_github=SECRETS_ACTION_TOKEN,
+            token_github=settings.ci__token_github,
             uv__native_tls=True,
         )
     if settings.ci__push__pypi or settings.ci__push__tag:
@@ -169,19 +178,19 @@ def main(settings: Settings, /) -> None:
             modifications=modifications,
             certificates=True,
             publish=settings.ci__push__pypi,
-            publish__username=settings.ci__push__publish__username,
-            publish__password=settings.ci__push__publish__password,
+            publish__username=settings.pypi__username,
+            publish__password=settings.pypi__read_write_token,
             publish__publish_url=settings.ci__push__publish__publish_url,
             tag=settings.ci__push__tag,
-            token_github=SECRETS_ACTION_TOKEN,
+            token_github=settings.ci__token_github,
             uv__native_tls=True,
         )
     if settings.pyproject:
         add_pyproject_toml(
             modifications=modifications,
             gitea_host_port=settings.gitea_host_port,
-            gitea_pypi_username=settings.ci__push__publish__username,
-            gitea_pypi_token=settings.ci__push__publish__password,
+            pypi__username=settings.pypi__username,
+            pypi__read_token=settings.pypi__read_token,
         )
 
 
@@ -192,8 +201,8 @@ def add_pyproject_toml(
     *,
     modifications: MutableSet[Path] | None = None,
     gitea_host_port: str = SETTINGS.gitea_host_port,
-    gitea_pypi_username: str = SETTINGS.ci__push__publish__username,
-    gitea_pypi_token: Secret[str] = SETTINGS.ci__push__publish__password,
+    pypi__username: str = SETTINGS.pypi__username,
+    pypi__read_token: Secret[str] = SETTINGS.pypi__read_token,
 ) -> None:
     with yield_toml_doc(PYPROJECT_TOML, modifications=modifications) as doc:
         tool = get_table(doc, "tool")
@@ -203,8 +212,8 @@ def add_pyproject_toml(
             index,
             _add_pyproject_toml_index(
                 host_port=gitea_host_port,
-                username=gitea_pypi_username,
-                password=gitea_pypi_token,
+                username=pypi__username,
+                password=pypi__read_token,
             ),
         )
 
@@ -212,8 +221,8 @@ def add_pyproject_toml(
 def _add_pyproject_toml_index(
     *,
     host_port: str = SETTINGS.gitea_host_port,
-    username: str = SETTINGS.ci__push__publish__username,
-    password: Secret[str] = SETTINGS.ci__push__publish__password,
+    username: str = SETTINGS.pypi__username,
+    password: Secret[str] = SETTINGS.pypi__read_token,
 ) -> Table:
     tab = table()
     tab["explicit"] = True
