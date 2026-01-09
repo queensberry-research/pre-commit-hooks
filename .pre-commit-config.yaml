@@ -25,7 +25,7 @@ repos:
       - id: touch-py-typed
       - id: update-requirements
   - repo: https://gitea.main:3000/qrt-public/conformalize
-    rev: 0.2.0
+    rev: 0.2.1
     hooks:
       - args:
           - --ci--pull-request--pre-commit
@@ -36,7 +36,7 @@ repos:
           - --ci--push--tag
           - --gitea-host=gitea.main
           - --python-version=3.12
-          # - --repo-name=conformalize
+          - --repo-name=conformalize
           - --script=script.py
         id: conformalize
   - repo: https://github.com/pre-commit/pre-commit-hooks

@@ -4,7 +4,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: 0 0 * * *
+    - cron: 13 8 * * *
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
@@ -15,7 +15,7 @@ jobs:
         name: Run 'pre-commit' hooks
         uses: dycw/action-run-hooks@latest
         with:
-          token: ${{secrets.ACTION_TOKEN}}
+          token-github: ${{secrets.ACTION_TOKEN}}
           repos: |-
             pre-commit/pre-commit-hooks
   pyright:
@@ -26,7 +26,7 @@ jobs:
       - name: Run 'pyright'
         uses: dycw/action-pyright@latest
         with:
-          token: ${{secrets.ACTION_TOKEN}}
+          token-github: ${{secrets.ACTION_TOKEN}}
           python-version: "3.12"
           native-tls: true
           with-requirements: script.py
@@ -42,7 +42,7 @@ jobs:
       - name: Run 'pytest'
         uses: dycw/action-pytest@latest
         with:
-          token: ${{secrets.ACTION_TOKEN}}
+          token-github: ${{secrets.ACTION_TOKEN}}
           python-version: ${{matrix.python-version}}
           resolution: ${{matrix.resolution}}
           native-tls: true
@@ -67,4 +67,4 @@ jobs:
       - name: Run 'ruff'
         uses: dycw/action-ruff@latest
         with:
-          token: ${{secrets.ACTION_TOKEN}}
+          token-github: ${{secrets.ACTION_TOKEN}}
