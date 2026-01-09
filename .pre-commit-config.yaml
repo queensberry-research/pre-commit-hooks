@@ -1,13 +1,14 @@
 repos:
-  - repo: https://github.com/dycw/conformalize
-    rev: 0.13.7
+  - repo: https://github.com/dycw/actions
+    rev: 0.8.12
     hooks:
-      - args:
+      - id: conformalize-repo
+        args:
           - --description=Project conformalizer
           - --envrc
           - --envrc--uv
-          - --pre-commit--dycw
           - --pre-commit--prettier
+          - --pre-commit--python
           - --pre-commit--ruff
           - --pre-commit--taplo
           - --pre-commit--uv
@@ -18,20 +19,24 @@ repos:
           - --repo-name=conformalize
           - --ruff
           - --script=script.py
-        id: conformalize
-  - repo: https://gitea.main:3000/qrt-public/conformalize
-    rev: 0.1.32
-    hooks:
-      - args:
-          - --gitea-host=gitea.main
-          - --gitea--pull-request--pre-commit
-          - --gitea--pull-request--pyright
-          - --gitea--pull-request--pytest
-          - --gitea--pull-request--ruff
-          - --gitea--push--tag
-          - --python-version=3.12
-          - --script=script.py
-        id: conformalize
+      - id: format-requirements
+      - id: replace-sequence-strs
+      - id: touch-empty-py
+      - id: touch-py-typed
+      - id: update-requirements
+  # - repo: https://gitea.main:3000/qrt-public/conformalize
+  #   rev: 0.1.33
+  #   hooks:
+  #     - args:
+  #         - --gitea-host=gitea.main
+  #         - --gitea--pull-request--pre-commit
+  #         - --gitea--pull-request--pyright
+  #         - --gitea--pull-request--pytest
+  #         - --gitea--pull-request--ruff
+  #         - --gitea--push--tag
+  #         - --python-version=3.12
+  #         - --script=script.py
+  #       id: conformalize
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -49,11 +54,6 @@ repos:
         args:
           - --autofix
       - id: trailing-whitespace
-  - repo: https://github.com/dycw/actions
-    rev: 0.3.42
-    hooks:
-      - id: format-requirements
-      - id: replace-sequence-strs
   - repo: local
     hooks:
       - id: prettier
@@ -64,7 +64,7 @@ repos:
           - markdown
           - yaml
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.11
     hooks:
       - id: ruff-check
         args:
