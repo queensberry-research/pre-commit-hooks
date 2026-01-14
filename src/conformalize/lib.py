@@ -3,15 +3,21 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING
 
+from actions.constants import ACTIONS_URL, PRE_COMMIT_CONFIG_YAML
 from actions.pre_commit.conformalize_repo.lib import (
     add_ci_pull_request_yaml,
     add_ci_push_yaml,
     get_tool_uv,
 )
+from actions.pre_commit.update_requirements.constants import UPDATE_REQUIREMENTS_SUB_CMD
 from actions.pre_commit.utilities import (
     ensure_contains,
+    get_list_dicts,
+    get_partial_dict,
     get_set_aot,
+    get_set_list_strs,
     yield_pyproject_toml,
+    yield_yaml_dict,
 )
 from tomlkit import table
 from typed_settings import Secret
@@ -131,7 +137,10 @@ def conformalize(
         )
     if pyproject:
         add_pyproject_toml(
-            modifications=modifications, gitea_host=gitea_host, gitea_port=gitea_port
+            modifications=modifications, host=gitea_host, port=gitea_port
+        )
+        add_update_requirements_index(
+            modifications=modifications, host=gitea_host, port=gitea_port
         )
     if len(modifications) >= 1:
         LOGGER.info(
@@ -147,15 +156,13 @@ def conformalize(
 def add_pyproject_toml(
     *,
     modifications: MutableSet[Path] | None = None,
-    gitea_host: str = SETTINGS.gitea_host,
-    gitea_port: int = SETTINGS.gitea_port,
+    host: str = SETTINGS.gitea_host,
+    port: int = SETTINGS.gitea_port,
 ) -> None:
     with yield_pyproject_toml(modifications=modifications) as doc:
         uv = get_tool_uv(doc)
         index = get_set_aot(uv, "index")
-        ensure_contains(
-            index, _add_pyproject_toml_index(host=gitea_host, port=gitea_port)
-        )
+        ensure_contains(index, _add_pyproject_toml_index(host=host, port=port))
 
 
 def _add_pyproject_toml_index(
@@ -164,10 +171,41 @@ def _add_pyproject_toml_index(
     tab = table()
     tab["explicit"] = True
     tab["name"] = "gitea"
-    tab["url"] = (
-        f"https://{PYPI_GITEA_USERNAME}:{PYPI_GITEA_READ_TOKEN}@{host}:{port}/{API_PACKAGES_QRT_PYPI}/simple"
-    )
+    tab["url"] = _pypi_gitea_url(host=host, port=port)
     return tab
 
 
-__all__ = ["add_pyproject_toml", "conformalize"]
+##
+
+
+def add_update_requirements_index(
+    *,
+    modifications: MutableSet[Path] | None = None,
+    host: str = SETTINGS.gitea_host,
+    port: int = SETTINGS.gitea_port,
+) -> None:
+    with yield_yaml_dict(PRE_COMMIT_CONFIG_YAML, modifications=modifications) as dict_:
+        try:
+            repos_list = get_list_dicts(dict_, "repos")
+            repo_dict = get_partial_dict(repos_list, {"repo": ACTIONS_URL})
+            hooks_list = get_list_dicts(repo_dict, "hooks")
+            hook_dict = get_partial_dict(
+                hooks_list, {"id": UPDATE_REQUIREMENTS_SUB_CMD}
+            )
+        except KeyError:
+            return
+        args_dict = get_set_list_strs(hook_dict, "args")
+        url = _pypi_gitea_url(host=host, port=port)
+        ensure_contains(args_dict, f"--indexes={url}")
+
+
+##
+
+
+def _pypi_gitea_url(
+    *, host: str = SETTINGS.gitea_host, port: int = SETTINGS.gitea_port
+) -> str:
+    return f"https://{PYPI_GITEA_USERNAME}:{PYPI_GITEA_READ_TOKEN}@{host}:{port}/{API_PACKAGES_QRT_PYPI}/simple"
+
+
+__all__ = ["add_pyproject_toml", "add_update_requirements_index", "conformalize"]

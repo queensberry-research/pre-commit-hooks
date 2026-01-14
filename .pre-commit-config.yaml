@@ -31,7 +31,7 @@ repos:
         args:
           - --native-tls
   - repo: https://github.com/queensberry-research/conformalize
-    rev: 0.2.13
+    rev: 0.2.14
     hooks:
       - args:
           - --ci--pull-request--pre-commit
