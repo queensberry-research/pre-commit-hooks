@@ -3,16 +3,15 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING
 
-from actions.constants import PYPROJECT_TOML
 from actions.pre_commit.conformalize_repo.lib import (
     add_ci_pull_request_yaml,
     add_ci_push_yaml,
 )
 from actions.pre_commit.utilities import (
     ensure_contains,
-    get_aot,
-    get_table,
-    yield_toml_doc,
+    get_set_aot,
+    get_set_table,
+    yield_pyproject_toml,
 )
 from tomlkit import table
 from typed_settings import Secret
@@ -151,10 +150,10 @@ def add_pyproject_toml(
     gitea_host: str = SETTINGS.gitea_host,
     gitea_port: int = SETTINGS.gitea_port,
 ) -> None:
-    with yield_toml_doc(PYPROJECT_TOML, modifications=modifications) as doc:
-        tool = get_table(doc, "tool")
-        uv = get_table(tool, "uv")
-        index = get_aot(uv, "index")
+    with yield_pyproject_toml(modifications=modifications) as doc:
+        tool = get_set_table(doc, "tool")
+        uv = get_set_table(tool, "uv")
+        index = get_set_aot(uv, "index")
         ensure_contains(
             index, _add_pyproject_toml_index(host=gitea_host, port=gitea_port)
         )

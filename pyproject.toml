@@ -21,7 +21,7 @@
   name = "conformalize"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.2.12"
+  version = "0.2.13"
 
   [project.scripts]
     conformalize-cli = "conformalize.cli:_main"
