@@ -1,7 +1,7 @@
 - id: conformalize
   name: conformalize
-  entry: ./script.py
-  language: unsupported_script
+  entry: conformalize-cli
+  language: python
   always_run: true
   pass_filenames: false
-  description: Project conformalizer
+  description: Conformalize a repo

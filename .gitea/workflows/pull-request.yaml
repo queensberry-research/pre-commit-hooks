@@ -30,7 +30,6 @@ jobs:
           token-github: ${{secrets.ACTION_TOKEN}}
           python-version: "3.13"
           native-tls: true
-          with-requirements: script.py
   pytest:
     env:
       CI: "1"
@@ -47,7 +46,6 @@ jobs:
           python-version: ${{matrix.python-version}}
           resolution: ${{matrix.resolution}}
           native-tls: true
-          with-requirements: script.py
     strategy:
       fail-fast: false
       matrix:

@@ -6,4 +6,4 @@ from utilities.subprocess import run
 
 class TestScript:
     def test_main(self) -> None:
-        run("./script.py", cwd=get_repo_root())
+        run("conformalize-cli", cwd=get_repo_root())

@@ -1,3 +1,3 @@
 # `conformalize`
 
-Project conformalizer
+Conformalize a repo

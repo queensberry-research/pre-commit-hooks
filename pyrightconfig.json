@@ -2,7 +2,7 @@
   "deprecateTypingAliases": true,
   "enableReachabilityAnalysis": false,
   "include": [
-    "script.py"
+    "src"
   ],
   "pythonVersion": "3.13",
   "reportCallInDefaultInitializer": true,

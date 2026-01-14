@@ -1,32 +1,34 @@
 repos:
   - repo: https://github.com/dycw/actions
-    rev: 0.12.6
+    rev: 0.13.5
     hooks:
       - id: conformalize-repo
         args:
-          - --description=Project conformalizer
+          - --description=Conformalize a repo
           - --envrc
           - --envrc--uv
+          - --gitignore
+          - --package-name=conformalize
           - --pre-commit--prettier
           - --pre-commit--python
           - --pre-commit--ruff
           - --pre-commit--shell
           - --pre-commit--taplo
           - --pre-commit--uv
+          - --pyproject
           - --pyright
           - --pytest
           - --python-version=3.13
           - --readme
           - --repo-name=conformalize
           - --ruff
-          - --script=script.py
       - id: format-requirements
       - id: replace-sequence-strs
       - id: touch-empty-py
       - id: touch-py-typed
       - id: update-requirements
   - repo: https://github.com/queensberry-research/conformalize
-    rev: 0.2.10
+    rev: 0.2.11
     hooks:
       - args:
           - --ci--pull-request--pre-commit
@@ -36,9 +38,9 @@ repos:
           - --ci--pull-request--ruff
           - --ci--push--tag
           - --gitea-host=gitea.main
+          - --pyproject
           - --python-version=3.13
           - --repo-name=conformalize
-          - --script=script.py
         id: conformalize
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -93,15 +95,12 @@ repos:
           - --option
           - reorder_keys=true
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.9.24
+    rev: 0.9.25
     hooks:
       - id: uv-lock
-        files: ^script\.py$
         args:
           - --upgrade
           - --resolution
           - highest
           - --prerelease
           - disallow
-          - --script
-          - script.py

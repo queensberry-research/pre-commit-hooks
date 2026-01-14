@@ -1,9 +1,14 @@
 [tool]
   [tool.bumpversion]
     allow_dirty = true
-    current_version = "0.2.11"
+    current_version = "0.2.12"
 
     [[tool.bumpversion.files]]
-      filename = "script.py"
+      filename = "pyproject.toml"
+      replace = "version = \"{new_version}\""
+      search = "version = \"{current_version}\""
+
+    [[tool.bumpversion.files]]
+      filename = "src/conformalize/__init__.py"
       replace = "__version__ = \"{new_version}\""
       search = "__version__ = \"{current_version}\""
