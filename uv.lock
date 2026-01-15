@@ -7,6 +7,7 @@ resolution-markers = [
 ]
 
 [options]
+resolution-mode = "lowest-direct"
 prerelease-mode = "disallow"
 
 [[package]]
@@ -118,7 +119,7 @@ wheels = [
 
 [[package]]
 name = "conformalize"
-version = "0.2.18"
+version = "0.2.19"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -140,15 +141,15 @@ dev = [
 requires-dist = [
     { name = "click", specifier = ">=8.3.1,<9" },
     { name = "coloredlogs", specifier = ">=15.0.1,<16" },
-    { name = "dycw-actions", specifier = ">=0.13.7,<1" },
-    { name = "dycw-utilities", specifier = ">=0.180.1,<1" },
+    { name = "dycw-actions", specifier = ">=0.14.2,<1" },
+    { name = "dycw-utilities", specifier = ">=0.181.0,<1" },
     { name = "rich", specifier = ">=14.2.0,<15" },
     { name = "typed-settings", extras = ["attrs", "click"], specifier = ">=25.3.0,<26" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.180.1,<1" },
+    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.181.0,<1" },
     { name = "pyright", specifier = ">=1.1.408,<2" },
     { name = "rich", specifier = ">=14.2.0,<15" },
 ]
@@ -216,7 +217,7 @@ wheels = [
 
 [[package]]
 name = "dycw-actions"
-version = "0.13.7"
+version = "0.14.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -237,7 +238,7 @@ dependencies = [
     { name = "xdg-base-dirs" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ff/9f/7b28896b2988f958a662dd5c000a777b954c2e05d6c360722e94a3ccb762/dycw_actions-0.13.7-py3-none-any.whl", hash = "sha256:fb9dfc91baed4cf611e835267324d70c98d49d154c51d3111dc2ebd828333066", size = 72752, upload-time = "2026-01-14T10:39:20.564Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/4b/2861d07c1adf7dec303ff6a41fc1c0c66b394e3e85d4cd6dc28d2979a81f/dycw_actions-0.14.2-py3-none-any.whl", hash = "sha256:24f7606a91cfe3d107beed9d3ad97b575e01be65d6fdf8ba052c4e419b6abfe0", size = 72787, upload-time = "2026-01-15T06:29:52.286Z" },
 ]
 
 [[package]]
@@ -254,7 +255,7 @@ wheels = [
 
 [[package]]
 name = "dycw-utilities"
-version = "0.180.1"
+version = "0.181.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "atomicwrites" },
@@ -263,7 +264,7 @@ dependencies = [
     { name = "whenever" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/67/44/ab459c48b6f7c37a8d67642b3477a74b2ae43c0b65d9e78cd4e9604b49cf/dycw_utilities-0.180.1-py3-none-any.whl", hash = "sha256:8a56fe8204fb7819fba48879b3229cc82b8c07adae01d6edc12a5c320221ac9d", size = 211774, upload-time = "2026-01-14T03:55:15.978Z" },
+    { url = "https://files.pythonhosted.org/packages/5e/78/49040454863e3c1b6857d54ee3735dab1314620888ddbe99f72e5c207ac1/dycw_utilities-0.181.0-py3-none-any.whl", hash = "sha256:42285f092b33bd9fb363bed816a23709a56bef1d7f1e62638f0f7c9bc4fbe82f", size = 213709, upload-time = "2026-01-15T05:22:29.386Z" },
 ]
 
 [package.optional-dependencies]
