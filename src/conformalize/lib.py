@@ -4,6 +4,7 @@ import sys
 from typing import TYPE_CHECKING
 
 from actions.constants import ACTIONS_URL, PRE_COMMIT_CONFIG_YAML
+from actions.pre_commit.conformalize_repo.constants import FORMATTER_PRIORITY
 from actions.pre_commit.conformalize_repo.lib import (
     add_ci_pull_request_yaml,
     add_ci_push_yaml,
@@ -28,6 +29,7 @@ from conformalize import __version__
 from conformalize.constants import (
     ACTION_TOKEN,
     API_PACKAGES_QRT_PYPI,
+    CONFORMALIZE_URL,
     PYPI_GITEA_READ_TOKEN,
     PYPI_GITEA_READ_WRITE_TOKEN,
     PYPI_GITEA_USERNAME,
@@ -135,6 +137,7 @@ def conformalize(
             token_github=Secret(ACTION_TOKEN),
             uv__native_tls=True,
         )
+    add_conformalize_priority(modifications=modifications)
     if pyproject:
         add_pyproject_toml(
             modifications=modifications, host=gitea_host, port=gitea_port
@@ -148,6 +151,21 @@ def conformalize(
             ", ".join(map(repr_str, sorted(modifications))),
         )
         sys.exit(1)
+
+
+##
+
+
+def add_conformalize_priority(*, modifications: MutableSet[Path] | None = None) -> None:
+    with yield_yaml_dict(PRE_COMMIT_CONFIG_YAML, modifications=modifications) as dict_:
+        try:
+            repos_list = get_list_dicts(dict_, "repos")
+            repo_dict = get_partial_dict(repos_list, {"repo": CONFORMALIZE_URL})
+            hooks_list = get_list_dicts(repo_dict, "hooks")
+            hook_dict = get_partial_dict(hooks_list, {"id": "conformalize"})
+        except KeyError:
+            return
+        hook_dict["priority"] = FORMATTER_PRIORITY
 
 
 ##
@@ -208,4 +226,9 @@ def _pypi_gitea_url(
     return f"https://{PYPI_GITEA_USERNAME}:{PYPI_GITEA_READ_TOKEN}@{host}:{port}/{API_PACKAGES_QRT_PYPI}/simple"
 
 
-__all__ = ["add_pyproject_toml", "add_update_requirements_index", "conformalize"]
+__all__ = [
+    "add_conformalize_priority",
+    "add_pyproject_toml",
+    "add_update_requirements_index",
+    "conformalize",
+]
