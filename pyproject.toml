@@ -3,30 +3,37 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = [
-    "pyright>=1.1.408, <2",
-    "rich>=14.2.0, <15",
-    "dycw-utilities[test]>=0.181.0, <1",
-  ]
+  dev = ["pyright>=1.1.408", "rich>=14.2.0", "dycw-utilities[test]>=0.183.4"]
 
 [project]
   dependencies = [
-    "click>=8.3.1, <9",
-    "coloredlogs>=15.0.1, <16",
-    "dycw-actions>=0.14.2, <1",
-    "dycw-utilities>=0.181.0, <1",
-    "rich>=14.2.0, <15",
-    "typed-settings[attrs,click]>=25.3.0, <26",
+    "attrs>=25.4.0",
+    "click>=8.3.1",
+    "coloredlogs>=15.0.1",
+    "dycw-actions>=0.15.5",
+    "dycw-utilities>=0.183.4",
+    "rich>=14.2.0",
+    "typed-settings>=25.3.0",
   ]
   description = "Conformalize a repo"
   name = "conformalize"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.2.19"
+  version = "0.2.20"
 
   [project.scripts]
     conformalize-cli = "conformalize.cli:_main"
 
+  [project.optional-dependencies]
+    cli = [
+      "attrs==25.4.0",
+      "click==8.3.1",
+      "coloredlogs==15.0.1",
+      "dycw-actions==0.15.5",
+      "dycw-utilities==0.183.4",
+      "rich==14.2.0",
+      "typed-settings==25.3.0",
+    ]
 [tool]
   [tool.uv]
     [[tool.uv.index]]

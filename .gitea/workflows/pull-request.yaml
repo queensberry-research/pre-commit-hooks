@@ -6,19 +6,6 @@ on:
   schedule:
     - cron: 13 8 * * *
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update CA certificates (pre-commit)
-        run: sudo update-ca-certificates
-      - if: gitea.event_name == 'pull_request'
-        name: Run 'pre-commit' hooks
-        uses: dycw/action-run-hooks@latest
-        with:
-          token-github: ${{secrets.ACTION_TOKEN}}
-          repos: |-
-            dycw/actions
-            pre-commit/pre-commit-hooks
   pyright:
     runs-on: ubuntu-latest
     steps:
