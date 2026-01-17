@@ -3,7 +3,7 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = ["pyright>=1.1.408", "rich>=14.2.0", "dycw-utilities[test]>=0.183.4"]
+  dev = ["pyright>=1.1.408", "rich>=14.2.0", "dycw-utilities[test]>=0.183.5"]
 
 [project]
   dependencies = [
@@ -11,7 +11,7 @@
     "click>=8.3.1",
     "coloredlogs>=15.0.1",
     "dycw-actions>=0.15.5",
-    "dycw-utilities>=0.183.4",
+    "dycw-utilities>=0.183.5",
     "rich>=14.2.0",
     "typed-settings>=25.3.0",
   ]
@@ -19,7 +19,7 @@
   name = "conformalize"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.2.21"
+  version = "0.2.22"
 
   [project.scripts]
     conformalize-cli = "conformalize.cli:_main"
@@ -30,7 +30,7 @@
       "click==8.3.1",
       "coloredlogs==15.0.1",
       "dycw-actions==0.15.5",
-      "dycw-utilities==0.183.4",
+      "dycw-utilities==0.183.5",
       "rich==14.2.0",
       "typed-settings==25.3.0",
     ]

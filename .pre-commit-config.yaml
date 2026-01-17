@@ -38,7 +38,7 @@ repos:
           - --native-tls
         priority: 10
   - repo: https://github.com/queensberry-research/conformalize
-    rev: 0.2.19
+    rev: 0.2.21
     hooks:
       - id: conformalize
         args:

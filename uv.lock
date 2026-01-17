@@ -118,7 +118,7 @@ wheels = [
 
 [[package]]
 name = "conformalize"
-version = "0.2.21"
+version = "0.2.22"
 source = { editable = "." }
 dependencies = [
     { name = "attrs" },
@@ -158,8 +158,8 @@ requires-dist = [
     { name = "coloredlogs", marker = "extra == 'cli'", specifier = "==15.0.1" },
     { name = "dycw-actions", specifier = ">=0.15.5" },
     { name = "dycw-actions", marker = "extra == 'cli'", specifier = "==0.15.5" },
-    { name = "dycw-utilities", specifier = ">=0.183.4" },
-    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.183.4" },
+    { name = "dycw-utilities", specifier = ">=0.183.5" },
+    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.183.5" },
     { name = "rich", specifier = ">=14.2.0" },
     { name = "rich", marker = "extra == 'cli'", specifier = "==14.2.0" },
     { name = "typed-settings", specifier = ">=25.3.0" },
@@ -169,7 +169,7 @@ provides-extras = ["cli"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.183.4" },
+    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.183.5" },
     { name = "pyright", specifier = ">=1.1.408" },
     { name = "rich", specifier = ">=14.2.0" },
 ]
@@ -276,7 +276,7 @@ wheels = [
 
 [[package]]
 name = "dycw-utilities"
-version = "0.183.4"
+version = "0.183.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "atomicwrites" },
@@ -285,7 +285,7 @@ dependencies = [
     { name = "whenever" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/69/a2/10ae93f47062195d3e6433eebeb10cd7e8c64f33f3214518c1248520ddca/dycw_utilities-0.183.4-py3-none-any.whl", hash = "sha256:a0f2ab9c8f78b8536c00abeebe32447e3280fb6731b49a99eace713aa23b3e52", size = 214142, upload-time = "2026-01-17T14:17:38.823Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/f6/744bded88c423b51e4d9c09334de99eba6e33bfd95fcd98ee6039f1d2e5f/dycw_utilities-0.183.5-py3-none-any.whl", hash = "sha256:de71a222335fe8e8422f8fdc6b95d9c58b2375547a9f0cd324fcc428e8e19bfc", size = 214143, upload-time = "2026-01-17T23:52:03.263Z" },
 ]
 
 [package.optional-dependencies]
