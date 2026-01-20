@@ -15,12 +15,13 @@
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.3.8"
+  version = "0.3.9"
 
   [project.scripts]
     add-qrt-hooks = "qrt_pre_commit_hooks.hooks.add_qrt_hooks:_main"
     modify-ci-pull-request = "qrt_pre_commit_hooks.hooks.modify_ci_pull_request:_main"
     modify-ci-push = "qrt_pre_commit_hooks.hooks.modify_ci_push:_main"
+    modify-direnv = "qrt_pre_commit_hooks.hooks.modify_direnv:_main"
     modify-pre-commit = "qrt_pre_commit_hooks.hooks.modify_pre_commit:_main"
     modify-pyproject = "qrt_pre_commit_hooks.hooks.modify_pyproject:_main"
 

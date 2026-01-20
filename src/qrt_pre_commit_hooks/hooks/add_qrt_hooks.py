@@ -17,7 +17,11 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.os import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks.constants import QRT_PRE_COMMIT_HOOKS_URL, nanode_option
+from qrt_pre_commit_hooks.constants import (
+    QRT_PRE_COMMIT_HOOKS_URL,
+    ci_nanode_option,
+    sops_option,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -29,19 +33,22 @@ if TYPE_CHECKING:
 @command(**CONTEXT_SETTINGS)
 @paths_argument
 @option("--ci", is_flag=True, default=False)
-@nanode_option
+@ci_nanode_option
 @python_option
+@sops_option
 def _main(
     *,
     paths: tuple[Path, ...],
     ci: bool = False,
-    nanode: bool = False,
+    ci_nanode: bool = False,
     python: bool = False,
+    sops: str | None = None,
 ) -> None:
     if is_pytest():
         return
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, ci=ci, nanode=nanode, python=python) for p in paths
+        partial(_run, path=p, ci=ci, ci_nanode=ci_nanode, python=python, sops=sops)
+        for p in paths
     ]
     run_all_maybe_raise(*funcs)
 
@@ -50,41 +57,69 @@ def _run(
     *,
     path: PathLike = PRE_COMMIT_CONFIG_YAML,
     ci: bool = False,
-    nanode: bool = False,
+    ci_nanode: bool = False,
     python: bool = False,
+    sops: str | None = None,
 ) -> bool:
     funcs: list[Callable[[], bool]] = [partial(_add_modify_pre_commit, path=path)]
     if ci:
-        funcs.append(partial(_add_modify_ci_pull_request, path=path))
-        funcs.append(partial(_add_modify_ci_push, path=path, nanode=nanode))
+        funcs.append(partial(_add_modify_ci_pull_request, path=path, sops=sops))
+        funcs.append(partial(_add_modify_ci_push, path=path, ci_nanode=ci_nanode))
     if python:
         funcs.append(partial(_add_modify_pyproject, path=path))
+    if sops:
+        funcs.append(partial(_add_modify_direnv, path=path, sops=sops))
     return run_all(*funcs)
 
 
-def _add_modify_ci_pull_request(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+def _add_modify_ci_pull_request(
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, sops: str | None = None
+) -> bool:
     modifications: set[Path] = set()
+    args: list[str] = []
+    if sops is not None:
+        args.append(f"--sops={sops}")
     _add_hook(
         QRT_PRE_COMMIT_HOOKS_URL,
         "modify-ci-pull-request",
         path=path,
         modifications=modifications,
         rev=True,
+        args_exact=args if len(args) >= 1 else None,
         type_="editor",
     )
     return len(modifications) == 0
 
 
 def _add_modify_ci_push(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, nanode: bool = False
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, ci_nanode: bool = False
 ) -> bool:
     modifications: set[Path] = set()
     args: list[str] = []
-    if nanode:
-        args.append("--nanode")
+    if ci_nanode:
+        args.append("--ci-nanode")
     _add_hook(
         QRT_PRE_COMMIT_HOOKS_URL,
         "modify-ci-push",
+        path=path,
+        modifications=modifications,
+        rev=True,
+        args_exact=args if len(args) >= 1 else None,
+        type_="editor",
+    )
+    return len(modifications) == 0
+
+
+def _add_modify_direnv(
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, sops: str | None = None
+) -> bool:
+    modifications: set[Path] = set()
+    args: list[str] = []
+    if sops is not None:
+        args.append(f"--sops={sops}")
+    _add_hook(
+        QRT_PRE_COMMIT_HOOKS_URL,
+        "modify-direnv",
         path=path,
         modifications=modifications,
         rev=True,

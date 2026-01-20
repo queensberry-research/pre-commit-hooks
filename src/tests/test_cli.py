@@ -11,10 +11,11 @@ class TestCLI:
     @mark.parametrize(
         ("hook", "args"),
         [
-            param("modify-ci-pull-request", [PRE_COMMIT_CONFIG_YAML]),
-            param("modify-ci-push", [PRE_COMMIT_CONFIG_YAML]),
-            param("modify-pre-commit", [PRE_COMMIT_CONFIG_YAML]),
-            param("modify-pyproject", [PYPROJECT_TOML]),
+            param("modify-ci-pull-request", [str(PRE_COMMIT_CONFIG_YAML)]),
+            param("modify-ci-push", [str(PRE_COMMIT_CONFIG_YAML)]),
+            param("modify-direnv", [str(PRE_COMMIT_CONFIG_YAML)]),
+            param("modify-pre-commit", [str(PRE_COMMIT_CONFIG_YAML)]),
+            param("modify-pyproject", [str(PYPROJECT_TOML)]),
         ],
     )
     @throttle_test(duration=HOUR)

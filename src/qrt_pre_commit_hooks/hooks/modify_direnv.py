@@ -1,0 +1,65 @@
+from __future__ import annotations
+
+from functools import partial
+from pathlib import Path
+from re import MULTILINE, escape, search
+from typing import TYPE_CHECKING
+
+from click import command
+from pre_commit_hooks.constants import ENVRC, paths_argument
+from pre_commit_hooks.utilities import merge_paths, run_all_maybe_raise, yield_text_file
+from utilities.click import CONTEXT_SETTINGS
+from utilities.os import is_pytest
+from utilities.text import strip_and_dedent
+from utilities.types import PathLike
+
+from qrt_pre_commit_hooks.constants import sops_option
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, MutableSet
+    from pathlib import Path
+
+    from utilities.types import PathLike
+
+
+@command(**CONTEXT_SETTINGS)
+@paths_argument
+@sops_option
+def _main(*, paths: tuple[Path, ...], sops: str | None = None) -> None:
+    if is_pytest():
+        return
+    paths_use = merge_paths(*paths, target=ENVRC)
+    funcs: list[Callable[[], bool]] = [
+        partial(_run, path=p, sops=sops) for p in paths_use
+    ]
+    run_all_maybe_raise(*funcs)
+
+
+def _run(*, path: PathLike = ENVRC, sops: str | None = None) -> bool:
+    modifications: set[Path] = set()
+    if sops is not None:
+        _add_sops(sops, path=path, modifications=modifications)
+    return len(modifications) == 0
+
+
+def _add_sops(
+    sops: str,
+    /,
+    *,
+    path: PathLike = ENVRC,
+    modifications: MutableSet[Path] | None = None,
+) -> None:
+    with yield_text_file(path, modifications=modifications) as context:
+        text = strip_and_dedent(
+            f"""
+            # sops
+            export SOPS_AGE_KEY_FILE="${{HOME}}/secrets/age/{sops}.txt"
+            """,
+            trailing=True,
+        )
+        if search(escape(text), context.output, flags=MULTILINE) is None:
+            context.output += f"\n\n{text}"
+
+
+if __name__ == "__main__":
+    _main()

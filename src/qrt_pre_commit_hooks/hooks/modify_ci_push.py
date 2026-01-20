@@ -9,7 +9,6 @@ from pre_commit_hooks.constants import GITEA_PUSH_YAML, paths_argument
 from pre_commit_hooks.utilities import (
     add_update_certificates,
     ensure_contains_partial_dict,
-    get_partial_dict,
     get_set_dict,
     get_set_list_dicts,
     merge_paths,
@@ -28,8 +27,9 @@ from qrt_pre_commit_hooks.constants import (
     PYPI_NANODE_PASSWORD,
     PYPI_NANODE_PUBLISH_URL,
     PYPI_NANODE_USERNAME,
-    nanode_option,
+    ci_nanode_option,
 )
+from qrt_pre_commit_hooks.utilities import yield_job_with
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSet
@@ -40,35 +40,30 @@ if TYPE_CHECKING:
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@nanode_option
-def _main(*, paths: tuple[Path, ...], nanode: bool = False) -> None:
+@ci_nanode_option
+def _main(*, paths: tuple[Path, ...], ci_nanode: bool = False) -> None:
     if is_pytest():
         return
     paths_use = merge_paths(*paths, target=GITEA_PUSH_YAML)
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, nanode=nanode) for p in paths_use
+        partial(_run, path=p, nanode=ci_nanode) for p in paths_use
     ]
     run_all_maybe_raise(*funcs)
 
 
 def _run(*, path: PathLike = GITEA_PUSH_YAML, nanode: bool = False) -> bool:
     modifications: set[Path] = set()
-    with yield_yaml_dict(path, modifications=modifications) as dict_:
-        jobs = get_set_dict(dict_, "jobs")
-        publish = get_set_dict(jobs, "publish")
-        steps = get_set_list_dicts(publish, "steps")
-        step = get_partial_dict(
-            steps,
-            {
-                "name": "Build and publish the package",
-                "uses": "dycw/action-publish-package@latest",
-            },
-        )
-        with_ = get_set_dict(step, "with")
-        with_["token-github"] = ACTION_TOKEN
-        with_["username"] = PYPI_GITEA_USERNAME
-        with_["password"] = PYPI_GITEA_READ_WRITE_TOKEN
-        with_["publish-url"] = PYPI_GITEA_PUBLISH_URL
+    with yield_job_with(
+        "publish",
+        "Build and publish the package",
+        "dycw/action-publish-package@latest",
+        path=path,
+        modifications=modifications,
+    ) as dict_:
+        dict_["token-github"] = ACTION_TOKEN
+        dict_["username"] = PYPI_GITEA_USERNAME
+        dict_["password"] = PYPI_GITEA_READ_WRITE_TOKEN
+        dict_["publish-url"] = PYPI_GITEA_PUBLISH_URL
     if nanode:
         _add_nanode(path=path, modifications=modifications)
     return len(modifications) == 0

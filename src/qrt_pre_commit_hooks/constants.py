@@ -28,7 +28,7 @@ PYPI_NANODE_PUBLISH_URL = "https://pypi.queensberryresearch.com"
 QRT_PRE_COMMIT_HOOKS_URL = "https://github.com/queensberry-research/pre-commit-hooks"
 
 
-nanode_option = option("--nanode", is_flag=True, default=False)
+ci_nanode_option = option("--ci-nanode", is_flag=True, default=False)
 sops_option = option("--sops", type=str, default=None)
 
 
@@ -47,6 +47,6 @@ __all__ = [
     "PYPI_NANODE_USERNAME",
     "QRT_PRE_COMMIT_HOOKS_URL",
     "SOPS_AGE_KEY",
-    "nanode_option",
+    "ci_nanode_option",
     "sops_option",
 ]

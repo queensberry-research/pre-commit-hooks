@@ -16,6 +16,12 @@
   language: python
   files: (\.pre-commit-config\.yaml|\.gitea/workflows/push\.yaml)$
 
+- id: modify-direnv
+  name: modify-direnv
+  entry: modify-direnv
+  language: python
+  files: (\.pre-commit-config\.yaml|\.envrc)$
+
 - id: modify-pre-commit
   name: modify-pre-commit
   entry: modify-pre-commit
