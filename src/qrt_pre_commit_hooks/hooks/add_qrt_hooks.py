@@ -79,7 +79,7 @@ def _add_modify_ci_pull_request(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> b
         path=path,
         modifications=modifications,
         rev=True,
-        type_="formatter",
+        type_="editor",
     )
     return len(modifications) == 0
 
@@ -92,7 +92,7 @@ def _add_modify_ci_push(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
         path=path,
         modifications=modifications,
         rev=True,
-        type_="formatter",
+        type_="editor",
     )
     return len(modifications) == 0
 
@@ -105,7 +105,7 @@ def _add_modify_pre_commit(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
         path=path,
         modifications=modifications,
         rev=True,
-        type_="formatter",
+        type_="pre-commit",
     )
     return len(modifications) == 0
 
@@ -118,7 +118,7 @@ def _add_modify_pyproject(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
         path=path,
         modifications=modifications,
         rev=True,
-        type_="formatter",
+        type_="editor",
     )
     return len(modifications) == 0
 

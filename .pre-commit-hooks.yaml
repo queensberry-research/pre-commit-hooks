@@ -1,6 +1,6 @@
-- id: add-hooks
-  name: add-hooks
-  entry: add-hooks
+- id: add-qrt-hooks
+  name: add-qrt-hooks
+  entry: add-qrt-hooks
   language: python
   files: \.pre-commit-config\.yaml$
 

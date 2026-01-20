@@ -24,9 +24,6 @@ PYPI_NANODE_USERNAME = "qrt"
 PYPI_NANODE_PASSWORD = "${{secrets.PYPI_NANODE_PASSWORD}}"  # noqa: S105
 
 
-PYTHON_VERSION = "3.13"
-
-
 QRT_PRE_COMMIT_HOOKS_URL = "https://github.com/queensberry-research/pre-commit-hooks"
 
 
@@ -45,7 +42,6 @@ __all__ = [
     "PYPI_GITEA_USERNAME",
     "PYPI_NANODE_PASSWORD",
     "PYPI_NANODE_USERNAME",
-    "PYTHON_VERSION",
     "QRT_PRE_COMMIT_HOOKS_URL",
     "SOPS_AGE_KEY",
     "sops_option",
