@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from click import command
 from pre_commit_hooks.constants import GITEA_PUSH_YAML, paths_argument
 from pre_commit_hooks.utilities import (
-    ensure_contains_partial_dict,
+    get_partial_dict,
     get_set_dict,
     get_set_list_dicts,
     merge_paths,
@@ -48,8 +48,12 @@ def _run(*, path: PathLike = GITEA_PUSH_YAML) -> bool:
         jobs = get_set_dict(dict_, "jobs")
         publish = get_set_dict(jobs, "publish")
         steps = get_set_list_dicts(publish, "steps")
-        step = ensure_contains_partial_dict(
-            steps, {"uses": "dycw/action-publish-package@latest"}
+        step = get_partial_dict(
+            steps,
+            {
+                "name": "Build and publish the package",
+                "uses": "dycw/action-publish-package@latest",
+            },
         )
         with_ = get_set_dict(step, "with")
         with_["token-github"] = ACTION_TOKEN

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from click import command
 from pre_commit_hooks.constants import GITEA_PULL_REQUEST_YAML, paths_argument
 from pre_commit_hooks.utilities import (
-    ensure_contains_partial_dict,
+    get_partial_dict,
     get_set_dict,
     get_set_list_dicts,
     merge_paths,
@@ -56,8 +56,8 @@ def _add_github_token(
         jobs = get_set_dict(dict_, "jobs")
         job = get_set_dict(jobs, name)
         steps = get_set_list_dicts(job, "steps")
-        step = ensure_contains_partial_dict(
-            steps, {"uses": f"dycw/action-{name}@latest"}
+        step = get_partial_dict(
+            steps, {"name": f"Run '{name}'", "uses": f"dycw/action-{name}@latest"}
         )
         with_ = get_set_dict(step, "with")
         with_["token-github"] = ACTION_TOKEN

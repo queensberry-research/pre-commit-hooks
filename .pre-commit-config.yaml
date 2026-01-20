@@ -102,7 +102,7 @@ repos:
           - --python-uv-native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.3.5
+    rev: 0.3.6
     hooks:
       - id: add-qrt-hooks
         args:
