@@ -1,3 +1,9 @@
+- id: add-hooks
+  name: add-hooks
+  entry: add-hooks
+  language: python
+  files: \.pre-commit-config\.yaml$
+
 - id: modify-ci-pull-request
   name: modify-ci-pull-request
   entry: modify-ci-pull-request
