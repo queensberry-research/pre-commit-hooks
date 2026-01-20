@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.95
+    rev: 0.14.96
     hooks:
       - id: add-hooks
         args:
@@ -102,7 +102,7 @@ repos:
           - --python-uv-native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.3.6
+    rev: 0.3.7
     hooks:
       - id: add-qrt-hooks
         args:

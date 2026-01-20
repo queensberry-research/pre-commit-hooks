@@ -22,11 +22,13 @@ PYPI_GITEA_PUBLISH_URL = f"https://{GITEA_HOST}:{GITEA_PORT}/{API_PACKAGES_QRT_P
 
 PYPI_NANODE_USERNAME = "qrt"
 PYPI_NANODE_PASSWORD = "${{secrets.PYPI_NANODE_PASSWORD}}"  # noqa: S105
+PYPI_NANODE_PUBLISH_URL = "https://pypi.queensberryresearch.com"
 
 
 QRT_PRE_COMMIT_HOOKS_URL = "https://github.com/queensberry-research/pre-commit-hooks"
 
 
+nanode_option = option("--nanode", is_flag=True, default=False)
 sops_option = option("--sops", type=str, default=None)
 
 
@@ -41,8 +43,10 @@ __all__ = [
     "PYPI_GITEA_READ_WRITE_TOKEN",
     "PYPI_GITEA_USERNAME",
     "PYPI_NANODE_PASSWORD",
+    "PYPI_NANODE_PUBLISH_URL",
     "PYPI_NANODE_USERNAME",
     "QRT_PRE_COMMIT_HOOKS_URL",
     "SOPS_AGE_KEY",
+    "nanode_option",
     "sops_option",
 ]
