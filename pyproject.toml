@@ -15,7 +15,7 @@
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.3.2"
+  version = "0.3.3"
 
   [project.scripts]
     add-qrt-hooks = "qrt_pre_commit_hooks.hooks.add_qrt_hooks:_main"

@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from click import command
 from pre_commit_hooks.constants import (
     DYCW_PRE_COMMIT_HOOKS_URL,
-    FORMATTER_PRIORITY,
     PRE_COMMIT_CONFIG_YAML,
+    PRE_COMMIT_PRIORITY,
     paths_argument,
 )
 from pre_commit_hooks.utilities import (
@@ -57,8 +57,8 @@ def _add_priority(
         repos = get_set_list_dicts(dict_, "repos")
         repo = get_set_partial_dict(repos, {"repo": QRT_PRE_COMMIT_HOOKS_URL})
         hooks = get_set_list_dicts(repo, "hooks")
-        hook = get_set_partial_dict(hooks, {"id": "add-hooks"})
-        hook["priority"] = FORMATTER_PRIORITY
+        hook = get_set_partial_dict(hooks, {"id": "add-qrt-hooks"})
+        hook["priority"] = PRE_COMMIT_PRIORITY
 
 
 def _add_pypi_gitea(
