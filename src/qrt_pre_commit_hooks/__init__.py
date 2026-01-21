@@ -7,7 +7,7 @@ from utilities.logging import setup_logging
 from utilities.os import is_debug
 from utilities.traceback import make_except_hook
 
-__version__ = "0.3.12"
+__version__ = "0.3.13"
 
 
 setup_logging(logger=__name__, files_dir=".logs")

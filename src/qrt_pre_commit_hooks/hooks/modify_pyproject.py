@@ -14,7 +14,7 @@ from pre_commit_hooks.utilities import (
     yield_tool_uv,
     yield_tool_uv_index,
 )
-from tomlkit import table
+from tomlkit import inline_table, table
 from utilities.click import CONTEXT_SETTINGS
 from utilities.os import is_pytest
 from utilities.types import PathLike
@@ -62,9 +62,9 @@ def _add_gitea_sources(
     with yield_tool_uv(path, modifications=modifications) as uv:
         sources = get_set_table(uv, "sources")
         sources.clear()
-        inner = table()
+        inner = inline_table()
         inner["index"] = "gitea"
-        for package in PACKAGES:
+        for package in sorted(PACKAGES):
             sources[package] = inner
 
 

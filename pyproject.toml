@@ -15,7 +15,7 @@
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.3.12"
+  version = "0.3.13"
 
   [project.scripts]
     add-qrt-hooks = "qrt_pre_commit_hooks.hooks.add_qrt_hooks:_main"
@@ -41,3 +41,25 @@
       explicit = true
       name = "gitea"
       url = "https://qrt-bot:e43d1df41a3ecf96e4adbaf04e98cfaf094d253e@gitea.main:3000/api/packages/qrt/pypi/simple"
+
+    [tool.uv.sources]
+      backfill = { index = "gitea" }
+      backtest = { index = "gitea" }
+      database = { index = "gitea" }
+      engine = { index = "gitea" }
+      infra-utilities = { index = "gitea" }
+      monitors = { index = "gitea" }
+      mount = { index = "gitea" }
+      nanode = { index = "gitea" }
+      optimizer = { index = "gitea" }
+      proxmox = { index = "gitea" }
+      qrt-click = { index = "gitea" }
+      qrt-ib-async = { index = "gitea" }
+      qrt-polars = { index = "gitea" }
+      qrt-redis = { index = "gitea" }
+      qrt-slack = { index = "gitea" }
+      qrt-types = { index = "gitea" }
+      qrt-utilities = { index = "gitea" }
+      signals = { index = "gitea" }
+      test-package = { index = "gitea" }
+      testing = { index = "gitea" }
