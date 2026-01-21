@@ -6,6 +6,7 @@ from pre_commit_hooks.constants import GITEA_PULL_REQUEST_YAML
 from pre_commit_hooks.utilities import write_text
 from utilities.text import strip_and_dedent
 
+from qrt_pre_commit_hooks.constants import PYPI_GITEA_READ_URL
 from qrt_pre_commit_hooks.hooks.modify_ci_pull_request import _run
 
 if TYPE_CHECKING:
@@ -37,7 +38,7 @@ class TestModifyCIPullRequest:
         )
         write_text(path, input_)
         exp_output = strip_and_dedent(
-            """
+            f"""
             jobs:
               pyright:
                 runs-on: ubuntu-latest
@@ -45,20 +46,22 @@ class TestModifyCIPullRequest:
                 - name: Run 'pyright'
                   uses: dycw/action-pyright@latest
                   with:
-                    token-github: ${{secrets.ACTION_TOKEN}}
+                    index: {PYPI_GITEA_READ_URL}
+                    token-github: ${{{{secrets.ACTION_TOKEN}}}}
               pytest:
                 steps:
                 - name: Run 'pytest'
                   uses: dycw/action-pytest@latest
                   with:
-                    token-github: ${{secrets.ACTION_TOKEN}}
+                    index: {PYPI_GITEA_READ_URL}
+                    token-github: ${{{{secrets.ACTION_TOKEN}}}}
               ruff:
                 runs-on: ubuntu-latest
                 steps:
                 - name: Run 'ruff'
                   uses: dycw/action-ruff@latest
                   with:
-                    token-github: ${{secrets.ACTION_TOKEN}}
+                    token-github: ${{{{secrets.ACTION_TOKEN}}}}
               """,
             trailing=True,
         )

@@ -12,7 +12,12 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.os import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks.constants import ACTION_TOKEN, SOPS_AGE_KEY, sops_option
+from qrt_pre_commit_hooks.constants import (
+    ACTION_TOKEN,
+    PYPI_GITEA_READ_URL,
+    SOPS_AGE_KEY,
+    sops_option,
+)
 from qrt_pre_commit_hooks.utilities import yield_job_with
 
 if TYPE_CHECKING:
@@ -37,15 +42,30 @@ def _main(*, paths: tuple[Path, ...], sops: str | None = None) -> None:
 
 def _run(*, path: PathLike = GITEA_PULL_REQUEST_YAML, sops: str | None = None) -> bool:
     modifications: set[Path] = set()
-    _add_github_token("pyright", path=path, modifications=modifications)
-    _add_github_token("pytest", path=path, modifications=modifications)
-    _add_github_token("ruff", path=path, modifications=modifications)
+    _add_index("pyright", path=path, modifications=modifications)
+    _add_index("pytest", path=path, modifications=modifications)
+    _add_token_github("pyright", path=path, modifications=modifications)
+    _add_token_github("pytest", path=path, modifications=modifications)
+    _add_token_github("ruff", path=path, modifications=modifications)
     if sops is not None:
         _add_sops_age_key(path=path, modifications=modifications)
     return len(modifications) == 0
 
 
-def _add_github_token(
+def _add_index(
+    name: str,
+    /,
+    *,
+    path: PathLike = GITEA_PULL_REQUEST_YAML,
+    modifications: MutableSet[Path] | None = None,
+) -> None:
+    with _yield_pull_request_job_with(
+        name, path=path, modifications=modifications
+    ) as dict_:
+        dict_["index"] = PYPI_GITEA_READ_URL
+
+
+def _add_token_github(
     name: str,
     /,
     *,
