@@ -3,19 +3,19 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = ["dycw-utilities[test]>=0.184.4", "pyright>=1.1.408", "rich>=14.2.0"]
+  dev = ["dycw-utilities[test]>=0.184.5", "pyright>=1.1.408", "rich>=14.2.0"]
 
 [project]
   dependencies = [
     "click>=8.3.1",
-    "dycw-pre-commit-hooks>=0.14.98",
-    "dycw-utilities>=0.184.4",
+    "dycw-pre-commit-hooks>=0.14.103",
+    "dycw-utilities>=0.184.5",
   ]
   description = "Pre-commit hooks"
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.3.10"
+  version = "0.3.11"
 
   [project.scripts]
     add-qrt-hooks = "qrt_pre_commit_hooks.hooks.add_qrt_hooks:_main"
@@ -28,8 +28,8 @@
   [project.optional-dependencies]
     cli = [
       "click==8.3.1",
-      "dycw-pre-commit-hooks==0.14.98",
-      "dycw-utilities==0.184.4",
+      "dycw-pre-commit-hooks==0.14.103",
+      "dycw-utilities==0.184.5",
     ]
 [tool]
   [tool.uv]

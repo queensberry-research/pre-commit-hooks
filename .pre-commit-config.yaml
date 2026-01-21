@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.98
+    rev: 0.14.103
     hooks:
       - id: add-hooks
         args:
@@ -52,6 +52,7 @@ repos:
       - id: setup-ci-push
         args:
           - --gitea
+          - --python
           - --certificates
         priority: 20
       - id: setup-coverage
@@ -64,6 +65,8 @@ repos:
           - --python-version=3.13
         priority: 20
       - id: setup-git
+        args:
+          - --python
         priority: 20
       - id: setup-pre-commit
         priority: 10
@@ -102,7 +105,7 @@ repos:
           - --python-uv-index=gitea=https://qrt-bot:e43d1df41a3ecf96e4adbaf04e98cfaf094d253e@gitea.main:3000/api/packages/qrt/pypi/simple
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.3.9
+    rev: 0.3.10
     hooks:
       - id: add-qrt-hooks
         args:

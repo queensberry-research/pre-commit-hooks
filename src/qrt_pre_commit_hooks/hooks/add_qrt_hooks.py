@@ -63,8 +63,9 @@ def _run(
 ) -> bool:
     funcs: list[Callable[[], bool]] = [partial(_add_modify_pre_commit, path=path)]
     if ci:
-        funcs.append(partial(_add_modify_ci_pull_request, path=path, sops=sops))
         funcs.append(partial(_add_modify_ci_push, path=path, ci_nanode=ci_nanode))
+    if ci and python:
+        funcs.append(partial(_add_modify_ci_pull_request, path=path, sops=sops))
     if python:
         funcs.append(partial(_add_modify_pyproject, path=path))
     if sops:
