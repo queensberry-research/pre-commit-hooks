@@ -20,7 +20,7 @@ from pre_commit_hooks.utilities import (
     yield_yaml_dict,
 )
 from utilities.click import CONTEXT_SETTINGS
-from utilities.os import is_pytest
+from utilities.core import is_pytest
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks.constants import PYPI_GITEA_READ_URL, QRT_PRE_COMMIT_HOOKS_URL

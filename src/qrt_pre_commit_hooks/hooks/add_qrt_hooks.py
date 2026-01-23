@@ -14,7 +14,7 @@ from pre_commit_hooks.constants import (
 from pre_commit_hooks.hooks.add_hooks import _add_hook
 from pre_commit_hooks.utilities import run_all, run_all_maybe_raise
 from utilities.click import CONTEXT_SETTINGS
-from utilities.os import is_pytest
+from utilities.core import is_pytest
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks.constants import (

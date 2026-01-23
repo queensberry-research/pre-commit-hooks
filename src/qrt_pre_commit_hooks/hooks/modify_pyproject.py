@@ -16,7 +16,7 @@ from pre_commit_hooks.utilities import (
 )
 from tomlkit import inline_table, table
 from utilities.click import CONTEXT_SETTINGS
-from utilities.os import is_pytest
+from utilities.core import is_pytest
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks.constants import PACKAGES, PYPI_GITEA_READ_URL

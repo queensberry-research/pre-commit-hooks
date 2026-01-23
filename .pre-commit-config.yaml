@@ -104,7 +104,7 @@ repos:
           - --python-uv-index=gitea=https://qrt-bot:e43d1df41a3ecf96e4adbaf04e98cfaf094d253e@gitea.main:3000/api/packages/qrt/pypi/simple
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.3.17
+    rev: 0.3.18
     hooks:
       - id: add-qrt-hooks
         args:
@@ -158,7 +158,7 @@ repos:
       - id: trailing-whitespace
         priority: 20
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.13
+    rev: v0.14.14
     hooks:
       - id: ruff-check
         args:

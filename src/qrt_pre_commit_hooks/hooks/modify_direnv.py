@@ -9,8 +9,7 @@ from click import command
 from pre_commit_hooks.constants import ENVRC, paths_argument
 from pre_commit_hooks.utilities import merge_paths, run_all_maybe_raise, yield_text_file
 from utilities.click import CONTEXT_SETTINGS
-from utilities.core import normalize_multi_line_str
-from utilities.os import is_pytest
+from utilities.core import is_pytest, normalize_multi_line_str
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks.constants import sops_option
