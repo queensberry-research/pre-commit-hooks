@@ -29,32 +29,39 @@ def _main(*, paths: tuple[Path, ...], sops: str | None = None) -> None:
         return
     paths_use = merge_paths(*paths, target=ENVRC)
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, sops=sops) for p in paths_use
+        partial(_run, path=p, name=sops) for p in paths_use
     ]
     run_all_maybe_raise(*funcs)
 
 
-def _run(*, path: PathLike = ENVRC, sops: str | None = None) -> bool:
+def _run(*, path: PathLike = ENVRC, name: str | None = None) -> bool:
     modifications: set[Path] = set()
-    if sops is not None:
-        _add_sops(sops, path=path, modifications=modifications)
+    if name is not None:
+        _add_sops(name, path=path, modifications=modifications)
     return len(modifications) == 0
 
 
 def _add_sops(
-    sops: str,
+    name: str,
     /,
     *,
     path: PathLike = ENVRC,
     modifications: MutableSet[Path] | None = None,
 ) -> None:
     with yield_text_file(path, modifications=modifications) as context:
-        text = normalize_multi_line_str(f"""
-            # sops
-            export SOPS_AGE_KEY_FILE="${{HOME}}/secrets/age/{sops}.txt"
-        """)
+        text = _get_text(name)
         if search(escape(text), context.output, flags=MULTILINE) is None:
             context.output += f"\n\n{text}"
+
+
+def _get_text(name: str, /) -> str:
+    path = f"${{HOME}}/secrets/age/{name}.txt"
+    return normalize_multi_line_str(f"""
+        # sops
+        if [ -f "{path}" ]; then
+        \texport SOPS_AGE_KEY_FILE="{path}"
+        fi
+    """)
 
 
 if __name__ == "__main__":
