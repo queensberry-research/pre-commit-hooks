@@ -106,7 +106,7 @@ wheels = [
 
 [[package]]
 name = "dycw-pre-commit-hooks"
-version = "0.14.124"
+version = "0.14.126"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -119,7 +119,7 @@ dependencies = [
     { name = "xdg-base-dirs" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/be/05/32b5dbaeb1c5921d0442666dd23d6681b1522eb80905d1476dd3eef34c8c/dycw_pre_commit_hooks-0.14.124-py3-none-any.whl", hash = "sha256:a680793a5100649eb5722ffacae83d937036bc83b70c8f8b6c7ab74e02683f05", size = 44112, upload-time = "2026-01-28T08:02:13.081Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/9a/85944a923891d1db66e97b35dd6c2cf2f21960c95f9f6c2d8a0f6376a77b/dycw_pre_commit_hooks-0.14.126-py3-none-any.whl", hash = "sha256:52119b44a1c7eb0bffbea3624ffde8b79d9b404ca07740b3ef88377b3b4d5c2c", size = 43125, upload-time = "2026-01-28T10:01:42.213Z" },
 ]
 
 [[package]]
@@ -629,9 +629,16 @@ wheels = [
 
 [[package]]
 name = "qrt-pre-commit-hooks"
-version = "0.3.23"
+version = "0.3.24"
 source = { editable = "." }
 dependencies = [
+    { name = "click" },
+    { name = "dycw-pre-commit-hooks" },
+    { name = "dycw-utilities" },
+]
+
+[package.optional-dependencies]
+cli = [
     { name = "click" },
     { name = "dycw-pre-commit-hooks" },
     { name = "dycw-utilities" },
@@ -641,14 +648,16 @@ dependencies = [
 dev = [
     { name = "dycw-utilities", extra = ["test"] },
     { name = "pyright" },
-    { name = "rich" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
-    { name = "dycw-pre-commit-hooks", specifier = ">=0.14.124" },
+    { name = "click", marker = "extra == 'cli'", specifier = "==8.3.1" },
+    { name = "dycw-pre-commit-hooks", specifier = ">=0.14.126" },
+    { name = "dycw-pre-commit-hooks", marker = "extra == 'cli'", specifier = "==0.14.126" },
     { name = "dycw-utilities", specifier = ">=0.187.0" },
+    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.187.0" },
 ]
 provides-extras = ["cli"]
 
@@ -656,7 +665,6 @@ provides-extras = ["cli"]
 dev = [
     { name = "dycw-utilities", extras = ["test"], specifier = ">=0.187.0" },
     { name = "pyright", specifier = ">=1.1.408" },
-    { name = "rich", specifier = ">=14.3.1,<15" },
 ]
 
 [[package]]
