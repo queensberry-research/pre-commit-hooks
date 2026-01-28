@@ -106,7 +106,7 @@ wheels = [
 
 [[package]]
 name = "dycw-pre-commit-hooks"
-version = "0.14.118"
+version = "0.14.124"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -119,7 +119,7 @@ dependencies = [
     { name = "xdg-base-dirs" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f2/d6/5d8a7394cff8bdd41eb036c6465e832f2d59243fb438091c1829419e1102/dycw_pre_commit_hooks-0.14.118-py3-none-any.whl", hash = "sha256:79b69b79c429ffd79589612ea5cb6f0e9f40718f2bc4768b19a4a87a5c45cbaf", size = 43992, upload-time = "2026-01-24T07:05:12.445Z" },
+    { url = "https://files.pythonhosted.org/packages/be/05/32b5dbaeb1c5921d0442666dd23d6681b1522eb80905d1476dd3eef34c8c/dycw_pre_commit_hooks-0.14.124-py3-none-any.whl", hash = "sha256:a680793a5100649eb5722ffacae83d937036bc83b70c8f8b6c7ab74e02683f05", size = 44112, upload-time = "2026-01-28T08:02:13.081Z" },
 ]
 
 [[package]]
@@ -136,16 +136,17 @@ wheels = [
 
 [[package]]
 name = "dycw-utilities"
-version = "0.186.6"
+version = "0.187.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "rich" },
     { name = "typing-extensions" },
     { name = "tzdata" },
     { name = "tzlocal" },
     { name = "whenever" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/be/7e6e9d29bc111e8be3d181b1bfb17e39db2946a34de74f3ae4847290cc98/dycw_utilities-0.186.6-py3-none-any.whl", hash = "sha256:65408fba3c14ec60247f8be376a11d3fa06044e778e89dab7e06106cedb7e0e5", size = 208478, upload-time = "2026-01-25T06:11:47.85Z" },
+    { url = "https://files.pythonhosted.org/packages/60/e9/a3b772c293973cb5f4deabc6b7cdfd0aacf6b0bb8216d042f632aa74cb89/dycw_utilities-0.187.0-py3-none-any.whl", hash = "sha256:641e420e9eee44b33dc0764e53a3896f32aaf4967285708efc828fa9fbc06d04", size = 209876, upload-time = "2026-01-28T06:49:03.543Z" },
 ]
 
 [package.optional-dependencies]
@@ -178,14 +179,14 @@ wheels = [
 
 [[package]]
 name = "hypothesis"
-version = "6.151.2"
+version = "6.151.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/13/69648b6f8c41600ce922386f084f5921fef55912dc980ded8ff4948ea626/hypothesis-6.151.2.tar.gz", hash = "sha256:fc91f88a77074b31c7ab871eebab3d2e0210fd3095f1d1ecbd9440c1c6bc06d9", size = 475491, upload-time = "2026-01-26T06:45:41.447Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e9/aa/0e1aff2de954a1b11acf643519599c3da97d461cf62e312cab266aa9f855/hypothesis-6.151.3.tar.gz", hash = "sha256:31bcd884b0be8f478aa2e52f0f73be03e8f6a9a2c66706fb93410ebaa5c27bcc", size = 475822, upload-time = "2026-01-28T05:37:32.494Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/3b/a6b9ecf082dd4d736bb553f7d9ad907a64373f41d0b57eb0be21acf157ee/hypothesis-6.151.2-py3-none-any.whl", hash = "sha256:909d2b5f0dc80640561bb2c3859f3c56a52ed8d1cc589e5e6450362ced8c31a0", size = 542937, upload-time = "2026-01-26T06:45:39.133Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/9a/e39da18745c889c7959e0ef4b53b71522062cc94714f99ac9d5b86cb222e/hypothesis-6.151.3-py3-none-any.whl", hash = "sha256:879a4b3dec37678fd1bd3a060aaaf3eedc2aab5543d9a85e5f2a04a6445683c6", size = 543275, upload-time = "2026-01-28T05:37:30.312Z" },
 ]
 
 [[package]]
@@ -628,7 +629,7 @@ wheels = [
 
 [[package]]
 name = "qrt-pre-commit-hooks"
-version = "0.3.22"
+version = "0.3.23"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -646,16 +647,16 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
-    { name = "dycw-pre-commit-hooks", specifier = ">=0.14.118" },
-    { name = "dycw-utilities", specifier = ">=0.186.6" },
+    { name = "dycw-pre-commit-hooks", specifier = ">=0.14.124" },
+    { name = "dycw-utilities", specifier = ">=0.187.0" },
 ]
 provides-extras = ["cli"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.186.6" },
+    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.187.0" },
     { name = "pyright", specifier = ">=1.1.408" },
-    { name = "rich", specifier = ">=14.3.1" },
+    { name = "rich", specifier = ">=14.3.1,<15" },
 ]
 
 [[package]]

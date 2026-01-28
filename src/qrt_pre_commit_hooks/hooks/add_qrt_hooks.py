@@ -61,7 +61,9 @@ def _run(
     ci_nanode: bool = False,
     sops: str | None = None,
 ) -> bool:
-    funcs: list[Callable[[], bool]] = [partial(_add_modify_pre_commit, path=path)]
+    funcs: list[Callable[[], bool]] = [
+        partial(_add_modify_pre_commit, path=path, python=python)
+    ]
     if ci:
         funcs.append(
             partial(_add_modify_ci_push, path=path, python=python, ci_nanode=ci_nanode)
@@ -137,14 +139,20 @@ def _add_modify_direnv(
     return len(modifications) == 0
 
 
-def _add_modify_pre_commit(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+def _add_modify_pre_commit(
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, python: bool = False
+) -> bool:
     modifications: set[Path] = set()
+    args: list[str] = []
+    if python:
+        args.append("--python")
     _add_hook(
         QRT_PRE_COMMIT_HOOKS_URL,
         "modify-pre-commit",
         path=path,
         modifications=modifications,
         rev=True,
+        args_exact=args if len(args) >= 1 else None,
         type_="pre-commit",
     )
     return len(modifications) == 0

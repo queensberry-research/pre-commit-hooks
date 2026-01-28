@@ -10,6 +10,7 @@ from pre_commit_hooks.constants import (
     PRE_COMMIT_CONFIG_YAML,
     PRE_COMMIT_PRIORITY,
     paths_argument,
+    python_option,
 )
 from pre_commit_hooks.utilities import (
     ensure_contains,
@@ -34,17 +35,21 @@ if TYPE_CHECKING:
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-def _main(*, paths: tuple[Path, ...]) -> None:
+@python_option
+def _main(*, paths: tuple[Path, ...], python: bool) -> None:
     if is_pytest():
         return
-    funcs: list[Callable[[], bool]] = [partial(_run, path=p) for p in paths]
+    funcs: list[Callable[[], bool]] = [
+        partial(_run, path=p, python=python) for p in paths
+    ]
     run_all_maybe_raise(*funcs)
 
 
-def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML, python: bool = False) -> bool:
     modifications: set[Path] = set()
     _add_priority(path=path, modifications=modifications)
-    _add_pypi_gitea(path=path, modifications=modifications)
+    if python:
+        _add_pypi_gitea(path=path, modifications=modifications)
     return len(modifications) == 0
 
 
