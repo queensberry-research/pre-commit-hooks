@@ -18,6 +18,7 @@ PACKAGES = {
     "backtest",
     "database",
     "engine",
+    "infra-redis",
     "infra-utilities",
     "monitors",
     "mount",
