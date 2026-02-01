@@ -18,6 +18,7 @@ PACKAGES = {
     "backtest",
     "database",
     "engine",
+    "gitea",
     "infra-redis",
     "infra-utilities",
     "monitors",
