@@ -84,7 +84,7 @@ def _add_index(
         hook = get_set_partial_dict(hooks, {"id": "add-hooks"})
         args = get_set_list_strs(hook, "args")
         url = SETTINGS.indexes.get_read_url(index)
-        ensure_contains(args, f"--python-uv-index=gitea={url}")
+        ensure_contains(args, f"--python-uv-index={index.value}={url}")
 
 
 if __name__ == "__main__":
