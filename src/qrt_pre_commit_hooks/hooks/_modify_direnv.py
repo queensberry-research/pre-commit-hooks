@@ -12,7 +12,7 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest, normalize_multi_line_str
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks._click import package_not_req_option
+from qrt_pre_commit_hooks._click import package_option
 from qrt_pre_commit_hooks._settings import SETTINGS
 
 if TYPE_CHECKING:
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@package_not_req_option
+@package_option
 def cli(*, paths: tuple[Path, ...], package: Package | None) -> None:
     if is_pytest():
         return

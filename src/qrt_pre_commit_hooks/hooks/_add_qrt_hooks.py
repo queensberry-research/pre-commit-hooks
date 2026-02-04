@@ -13,7 +13,7 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks._click import package_req_option
+from qrt_pre_commit_hooks._click import package_option
 from qrt_pre_commit_hooks._settings import SETTINGS
 
 if TYPE_CHECKING:
@@ -27,22 +27,25 @@ if TYPE_CHECKING:
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@package_req_option
-def cli(*, paths: tuple[Path, ...], package: Package) -> None:
+@package_option
+def cli(*, paths: tuple[Path, ...], package: Package | None) -> None:
     if is_pytest():
         return
-    funcs: list[Callable[[], bool]] = [partial(_run, package, path=p) for p in paths]
+    funcs: list[Callable[[], bool]] = [
+        partial(_run, path=p, package=package) for p in paths
+    ]
     run_all_maybe_raise(*funcs)
 
 
-def _run(package: Package, /, *, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None) -> bool:
     funcs: list[Callable[[], bool]] = [
-        partial(_add_modify_ci_pull_request, package, path=path),
         partial(_add_modify_ci_push, path=path, package=package),
-        partial(_add_modify_pre_commit, path=path, package=package),
-        partial(_add_modify_pyproject, package, path=path),
         partial(_add_modify_direnv, path=path, package=package),
+        partial(_add_modify_pre_commit, path=path, package=package),
     ]
+    if package is not None:
+        funcs.append(partial(_add_modify_ci_pull_request, package, path=path))
+        funcs.append(partial(_add_modify_pyproject, package, path=path))
     return run_all(*funcs)
 
 
