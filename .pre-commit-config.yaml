@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.130
+    rev: 0.14.131
     hooks:
       - id: add-hooks
         args:
@@ -30,8 +30,6 @@ repos:
       - id: run-prek-autoupdate
         priority: 10
       - id: run-uv-lock
-        args:
-          - --certificates
         priority: 20
       - id: run-version-bump
         priority: 20
@@ -100,7 +98,7 @@ repos:
           - --certificates
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.4.9
+    rev: 0.4.10
     hooks:
       - id: add-qrt-hooks
         args:

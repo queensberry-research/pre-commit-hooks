@@ -30,6 +30,10 @@ class TestCLI:
             param("modify-direnv", [str(ENVRC), "--package", Package.trading.value]),
             param("modify-pre-commit", [str(PRE_COMMIT_CONFIG_YAML)]),
             param(
+                "modify-pre-commit",
+                [str(PRE_COMMIT_CONFIG_YAML), "--package", Package.trading.value],
+            ),
+            param(
                 "modify-pyproject",
                 [str(PYPROJECT_TOML), "--package", Package.trading.value],
             ),
