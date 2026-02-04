@@ -63,7 +63,7 @@ def _add_index(
         tab = table()
         tab["explicit"] = True
         tab["name"] = index.value
-        tab["url"] = SETTINGS.indexes.get_read_url(index, visible=True)
+        tab["url"] = SETTINGS.indexes.get_read_url(index)
         ensure_contains(indexes, tab)
 
 

@@ -27,8 +27,8 @@ class TestGetText:
         result = _get_uv_text(Index.gitea)
         expected = normalize_multi_line_str(r"""
             # uv index
-            export UV_INDEX_GITEA_USERNAME=gitea
-            export UV_INDEX_GITEA_PASSWORD=\w+
+            export UV_INDEX_GITEA_USERNAME='gitea'
+            export UV_INDEX_GITEA_PASSWORD='\w+'
         """)
         check_multi_line_regex(expected, result)
 
@@ -44,8 +44,8 @@ class TestModifyDirenv:
 
 
             # uv index
-            export UV_INDEX_GITEA_USERNAME=gitea
-            export UV_INDEX_GITEA_PASSWORD=\w+
+            export UV_INDEX_GITEA_USERNAME='gitea'
+            export UV_INDEX_GITEA_PASSWORD='\w+'
         """)
         for i in range(2):
             result = _run(path=path, package=Package.trading)

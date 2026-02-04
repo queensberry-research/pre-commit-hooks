@@ -86,8 +86,8 @@ def _get_uv_text(index: Index, /) -> str:
     password = SETTINGS.indexes.get_read_password(index, visible=True)
     return normalize_multi_line_str(f"""
         # uv index
-        export UV_INDEX_{name.upper()}_USERNAME={name}
-        export UV_INDEX_{name.upper()}_PASSWORD={password}
+        export UV_INDEX_{name.upper()}_USERNAME='{name}'
+        export UV_INDEX_{name.upper()}_PASSWORD='{password}'
     """)
 
 

@@ -19,7 +19,7 @@ class TestModifyPyProject:
             [[tool.uv.index]]
             explicit = true
             name = "gitea"
-            url = "https://qrt-bot:e43d1df41a3ecf96e4adbaf04e98cfaf094d253e@gitea.qrt:3000/api/packages/qrt/pypi/simple"
+            url = "https://gitea.qrt:3000/api/packages/qrt/pypi/simple"
 
             [tool.uv.sources]
             backfill = {index = "gitea"}
