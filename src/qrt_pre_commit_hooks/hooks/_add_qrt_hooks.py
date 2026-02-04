@@ -56,7 +56,7 @@ def _add_modify_ci_pull_request(
         path=path,
         modifications=modifications,
         rev=True,
-        args_exact=["--package", package.value],
+        args_exact=[f"--package={package.value}"],
         type_="editor",
     )
     return len(modifications) == 0
@@ -68,7 +68,7 @@ def _add_modify_ci_push(
     modifications: set[Path] = set()
     args: list[str] = []
     if package is not None:
-        args.extend(["--package", package.value])
+        args.append(f"--package={package.value}")
     _add_hook(
         SETTINGS.url,
         "modify-ci-push",
@@ -87,7 +87,7 @@ def _add_modify_direnv(
     modifications: set[Path] = set()
     args: list[str] = []
     if package is not None:
-        args.extend(["--package", package.value])
+        args.append(f"--package={package.value}")
     _add_hook(
         SETTINGS.url,
         "modify-direnv",
@@ -106,7 +106,7 @@ def _add_modify_pre_commit(
     modifications: set[Path] = set()
     args: list[str] = []
     if package is not None:
-        args.extend(["--package", package.value])
+        args.append(f"--package={package.value}")
     _add_hook(
         SETTINGS.url,
         "modify-pre-commit",
@@ -129,7 +129,7 @@ def _add_modify_pyproject(
         path=path,
         modifications=modifications,
         rev=True,
-        args_exact=["--package", package.value],
+        args_exact=[f"--package={package.value}"],
         type_="editor",
     )
     return len(modifications) == 0

@@ -16,7 +16,7 @@
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.4.3"
+  version = "0.4.4"
 
   [project.optional-dependencies]
     cli = [
@@ -42,29 +42,13 @@
 
     [[tool.uv.index]]
       explicit = true
-      name = "gitea"
-      url = "https://qrt-bot:e43d1df41a3ecf96e4adbaf04e98cfaf094d253e@gitea.main:3000/api/packages/qrt/pypi/simple"
+      name = "nanode"
+      url = "https://pypi.queensberryresearch.com/simple"
 
     [tool.uv.sources]
-      backfill = { index = "gitea" }
-      backtest = { index = "gitea" }
-      database = { index = "gitea" }
-      engine = { index = "gitea" }
-      gitea = { index = "gitea" }
-      infra-redis = { index = "gitea" }
-      infra-utilities = { index = "gitea" }
-      monitors = { index = "gitea" }
-      mount = { index = "gitea" }
-      nanode = { index = "gitea" }
-      optimizer = { index = "gitea" }
-      proxmox = { index = "gitea" }
-      qrt-click = { index = "gitea" }
-      qrt-ib-async = { index = "gitea" }
-      qrt-polars = { index = "gitea" }
-      qrt-redis = { index = "gitea" }
-      qrt-slack = { index = "gitea" }
-      qrt-types = { index = "gitea" }
-      qrt-utilities = { index = "gitea" }
-      signals = { index = "gitea" }
-      test-package = { index = "gitea" }
-      testing = { index = "gitea" }
+      gitea = { index = "nanode" }
+      infra-redis = { index = "nanode" }
+      infra-utilities = { index = "nanode" }
+      mount = { index = "nanode" }
+      nanode = { index = "nanode" }
+      proxmox = { index = "nanode" }
