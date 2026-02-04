@@ -505,19 +505,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pydantic-settings-sops"
-version = "0.1.2"
-source = { registry = "https://pypi.queensberryresearch.com/simple" }
-dependencies = [
-    { name = "pydantic-settings" },
-    { name = "sopsy" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/04/7b/e45527771f7f92a1a31bd569a3b092c70ba33b50e8bf7dc18189e8e74057/pydantic_settings_sops-0.1.2.tar.gz", hash = "sha256:8d03ea8233cec696b4737563947bc668a7cd4a2773252b40948f850784d718cd", size = 57702, upload-time = "2025-05-14T13:37:42.844Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/de/eb/adb8bb3873f4925b3c0c6c223b356ae51303cc9a2068f4f40e9a1d118cbe/pydantic_settings_sops-0.1.2-py3-none-any.whl", hash = "sha256:0e13d68d2630921d4ba1b45806b26d4a38a5bdc8880dba41d439591d331ce903", size = 3905, upload-time = "2025-05-14T13:37:41.532Z" },
-]
-
-[[package]]
 name = "pygments"
 version = "2.19.2"
 source = { registry = "https://pypi.queensberryresearch.com/simple" }
@@ -786,13 +773,13 @@ wheels = [
 
 [[package]]
 name = "qrt-pre-commit-hooks"
-version = "0.4.7"
+version = "0.4.8"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "dycw-pre-commit-hooks" },
     { name = "dycw-utilities" },
-    { name = "pydantic-settings-sops" },
+    { name = "pydantic-settings" },
 ]
 
 [package.dev-dependencies]
@@ -806,7 +793,7 @@ requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
     { name = "dycw-pre-commit-hooks", specifier = ">=0.14.130" },
     { name = "dycw-utilities", specifier = ">=0.188.18" },
-    { name = "pydantic-settings-sops", specifier = ">=0.1.2" },
+    { name = "pydantic-settings", specifier = ">=2.12.0" },
 ]
 provides-extras = ["cli"]
 
@@ -827,18 +814,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/74/99/a4cab2acbb884f80e558b0771e97e21e939c5dfb460f488d19df485e8298/rich-14.3.2.tar.gz", hash = "sha256:e712f11c1a562a11843306f5ed999475f09ac31ffb64281f73ab29ffdda8b3b8", size = 230143, upload-time = "2026-02-01T16:20:47.908Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ef/45/615f5babd880b4bd7d405cc0dc348234c5ffb6ed1ea33e152ede08b2072d/rich-14.3.2-py3-none-any.whl", hash = "sha256:08e67c3e90884651da3239ea668222d19bea7b589149d8014a21c633420dbb69", size = 309963, upload-time = "2026-02-01T16:20:46.078Z" },
-]
-
-[[package]]
-name = "sopsy"
-version = "1.2.1"
-source = { registry = "https://pypi.queensberryresearch.com/simple" }
-dependencies = [
-    { name = "pyyaml" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/af/bd/55feeb922c4e83c02a36a81d09beebf4cd1dc8ceac36e0d25a39359a2e32/sopsy-1.2.1.tar.gz", hash = "sha256:2159a82f6fee10b7e29b688e4a0bdc1a50e96e8da2357ff46f97554aff0990f1", size = 108860, upload-time = "2025-07-26T19:41:10.626Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/d3/fbb22b18176ee0aa41af23ccaeee2ce879158042bf2335dfdcbc14bc5ea6/sopsy-1.2.1-py3-none-any.whl", hash = "sha256:3ff3fae9d53eb52acb5b3c15662db2f9521b8e2fb1a199872c37fb330d84d8c4", size = 7486, upload-time = "2025-07-26T19:41:09.488Z" },
 ]
 
 [[package]]

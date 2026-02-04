@@ -8,24 +8,22 @@ from pydantic import SecretStr
 from pydantic_settings import BaseSettings
 from utilities.core import extract_group
 from utilities.importlib import files
-from utilities.pydantic_settings import PathLikeOrWithSection, load_settings
-from utilities.pydantic_settings_sops import SopsBaseSettings
+from utilities.pydantic_settings import (
+    CustomBaseSettings,
+    PathLikeOrWithSection,
+    load_settings,
+)
 
 from qrt_pre_commit_hooks._enums import Index, Package
 
 _FILES = files(anchor="qrt_pre_commit_hooks")
 _SETTINGS_TOML = "settings.toml"
-_SECRETS_JSON = "secrets.json"
 
 
-class _Settings(SopsBaseSettings):
+class _Settings(CustomBaseSettings):
     toml_files: ClassVar[Sequence[PathLikeOrWithSection]] = [
         (_SETTINGS_TOML, "qrt_pre_commit_hooks"),
         _FILES.joinpath(_SETTINGS_TOML),
-    ]
-    secret_files: ClassVar[Sequence[PathLikeOrWithSection]] = [
-        (_SECRETS_JSON, "qrt_pre_commit_hooks"),
-        _FILES.joinpath(_SECRETS_JSON),
     ]
 
     indexes: _IndexesSettings
