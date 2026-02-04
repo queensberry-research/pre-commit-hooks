@@ -104,7 +104,7 @@ repos:
           - --python-uv-index=nanode=https://pypi.queensberryresearch.com/simple
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.4.5
+    rev: 0.4.8
     hooks:
       - id: add-qrt-hooks
         args:

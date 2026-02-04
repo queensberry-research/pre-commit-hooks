@@ -41,7 +41,7 @@ def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None) ->
     funcs: list[Callable[[], bool]] = [
         partial(_add_modify_ci_push, path=path, package=package),
         partial(_add_modify_direnv, path=path, package=package),
-        partial(_add_modify_pre_commit, path=path, package=package),
+        partial(_add_modify_pre_commit, path=path),
     ]
     if package is not None:
         funcs.append(partial(_add_modify_ci_pull_request, package, path=path))
@@ -103,20 +103,14 @@ def _add_modify_direnv(
     return len(modifications) == 0
 
 
-def _add_modify_pre_commit(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
-) -> bool:
+def _add_modify_pre_commit(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = []
-    if package is not None:
-        args.append(f"--package={package.value}")
     _add_hook(
         SETTINGS.url,
         "modify-pre-commit",
         path=path,
         modifications=modifications,
         rev=True,
-        args_exact=args if len(args) >= 1 else None,
         type_="pre-commit",
     )
     return len(modifications) == 0
