@@ -98,7 +98,7 @@ repos:
           - --certificates
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.4.10
+    rev: 0.4.11
     hooks:
       - id: add-qrt-hooks
         args:
