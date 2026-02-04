@@ -116,6 +116,7 @@ def _add_modify_pre_commit(
         path=path,
         modifications=modifications,
         rev=True,
+        args_exact=args if len(args) >= 1 else None,
         type_="pre-commit",
     )
     return len(modifications) == 0
