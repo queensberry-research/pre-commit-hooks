@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 from functools import partial
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from click import command
-from pre_commit_hooks.constants import GITEA_PUSH_YAML, paths_argument, python_option
+from pre_commit_hooks.constants import GITEA_PUSH_YAML, paths_argument
 from pre_commit_hooks.utilities import (
     add_update_certificates,
     ensure_contains_partial_dict,
@@ -19,49 +18,38 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks.constants import (
-    ACTION_TOKEN,
-    PYPI_GITEA_PUBLISH_URL,
-    PYPI_GITEA_READ_WRITE_TOKEN,
-    PYPI_GITEA_USERNAME,
-    PYPI_NANODE_PASSWORD,
-    PYPI_NANODE_PUBLISH_URL,
-    PYPI_NANODE_USERNAME,
-    ci_nanode_option,
-)
-from qrt_pre_commit_hooks.utilities import yield_job_with
+from qrt_pre_commit_hooks._click import package_not_req_option
+from qrt_pre_commit_hooks._constants import ACTION_TOKEN
+from qrt_pre_commit_hooks._enums import Index, Package
+from qrt_pre_commit_hooks._settings import SETTINGS
+from qrt_pre_commit_hooks._utilities import yield_job_with
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSet
     from pathlib import Path
 
-    from utilities.types import PathLike
+    from utilities.types import PathLike, StrDict
 
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@python_option
-@ci_nanode_option
-def _main(
-    *, paths: tuple[Path, ...], python: bool = False, ci_nanode: bool = False
-) -> None:
+@package_not_req_option
+def cli(*, paths: tuple[Path, ...], package: Package | None = None) -> None:
     if is_pytest():
         return
     paths_use = merge_paths(*paths, target=GITEA_PUSH_YAML)
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, python=python, nanode=ci_nanode) for p in paths_use
+        partial(_run, path=p, package=package) for p in paths_use
     ]
     run_all_maybe_raise(*funcs)
 
 
-def _run(
-    *, path: PathLike = GITEA_PUSH_YAML, python: bool = False, nanode: bool = False
-) -> bool:
+def _run(*, path: PathLike = GITEA_PUSH_YAML, package: Package | None = None) -> bool:
     modifications: set[Path] = set()
     _modify_tag(path=path, modifications=modifications)
-    if python:
+    if package is not None:
         _modify_publish(path=path, modifications=modifications)
-    if nanode:
+    if package is Package.infra:
         _add_nanode(path=path, modifications=modifications)
     return len(modifications) == 0
 
@@ -89,10 +77,7 @@ def _modify_publish(
         path=path,
         modifications=modifications,
     ) as dict_:
-        dict_["token-github"] = ACTION_TOKEN
-        dict_["username"] = PYPI_GITEA_USERNAME
-        dict_["password"] = PYPI_GITEA_READ_WRITE_TOKEN
-        dict_["publish-url"] = PYPI_GITEA_PUBLISH_URL
+        _add_dict(dict_, Index.gitea)
 
 
 def _add_nanode(
@@ -112,12 +97,16 @@ def _add_nanode(
             },
         )
         with_ = get_set_dict(step, "with")
-        with_["token-github"] = ACTION_TOKEN
-        with_["username"] = PYPI_NANODE_USERNAME
-        with_["password"] = PYPI_NANODE_PASSWORD
-        with_["publish-url"] = PYPI_NANODE_PUBLISH_URL
+        _add_dict(with_, Index.nanode)
         with_["native-tls"] = True
 
 
+def _add_dict(dict_: StrDict, index: Index, /) -> None:
+    dict_["token-github"] = ACTION_TOKEN
+    dict_["username"] = SETTINGS.indexes.get_username(index)
+    dict_["password"] = SETTINGS.indexes.get_publish_password(index, visible=False)
+    dict_["publish-url"] = SETTINGS.indexes.get_publish_url(index)
+
+
 if __name__ == "__main__":
-    _main()
+    cli()

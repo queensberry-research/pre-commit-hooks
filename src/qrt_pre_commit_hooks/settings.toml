@@ -1,0 +1,36 @@
+packages = [
+  { name = "backfill", type = "trading" },
+  { name = "backtest", type = "trading" },
+  { name = "database", type = "trading" },
+  { name = "engine", type = "trading" },
+  { name = "monitors", type = "trading" },
+  { name = "optimizer", type = "trading" },
+  { name = "qrt-click", type = "trading" },
+  { name = "qrt-ib-async", type = "trading" },
+  { name = "qrt-polars", type = "trading" },
+  { name = "qrt-redis", type = "trading" },
+  { name = "qrt-slack", type = "trading" },
+  { name = "qrt-types", type = "trading" },
+  { name = "qrt-utilities", type = "trading" },
+  { name = "signals", type = "trading" },
+  { name = "test-package", type = "trading" },
+  { name = "testing", type = "trading" },
+
+  { name = "gitea", type = "infra" },
+  { name = "infra-redis", type = "infra" },
+  { name = "infra-utilities", type = "infra" },
+  { name = "mount", type = "infra" },
+  { name = "nanode", type = "infra" },
+  { name = "proxmox", type = "infra" },
+]
+url = "https://github.com/queensberry-research/pre-commit-hooks"
+
+
+[indexes]
+  [indexes.gitea]
+    publish_url = "https://gitea.qrt:3000/api/packages/qrt/pypi"
+    username = "qrt-bot"
+
+  [indexes.nanode]
+    publish_url = "https://pypi.queensberryresearch.com"
+    username = "qrt"

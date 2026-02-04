@@ -12,13 +12,10 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks.constants import (
-    ACTION_TOKEN,
-    PYPI_GITEA_READ_URL,
-    SOPS_AGE_KEY,
-    sops_option,
-)
-from qrt_pre_commit_hooks.utilities import yield_job_with
+from qrt_pre_commit_hooks._click import package_req_option
+from qrt_pre_commit_hooks._constants import ACTION_TOKEN, SOPS_AGE_KEY
+from qrt_pre_commit_hooks._settings import SETTINGS
+from qrt_pre_commit_hooks._utilities import yield_job_with
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator, MutableSet
@@ -26,24 +23,32 @@ if TYPE_CHECKING:
 
     from utilities.types import PathLike, StrDict
 
+    from qrt_pre_commit_hooks._enums import Index, Package
+
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@sops_option
-def _main(*, paths: tuple[Path, ...], sops: str | None = None) -> None:
+@package_req_option
+def cli(*, paths: tuple[Path, ...], package: Package) -> None:
     if is_pytest():
         return
     paths_use = merge_paths(*paths, target=GITEA_PULL_REQUEST_YAML)
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, sops=sops) for p in paths_use
+        partial(_run, package.pkg_index, path=p) for p in paths_use
     ]
     run_all_maybe_raise(*funcs)
 
 
-def _run(*, path: PathLike = GITEA_PULL_REQUEST_YAML, sops: str | None = None) -> bool:
+def _run(
+    index: Index,
+    /,
+    *,
+    path: PathLike = GITEA_PULL_REQUEST_YAML,
+    sops: str | None = None,
+) -> bool:
     modifications: set[Path] = set()
-    _add_index("pyright", path=path, modifications=modifications)
-    _add_index("pytest", path=path, modifications=modifications)
+    _add_index("pyright", index, path=path, modifications=modifications)
+    _add_index("pytest", index, path=path, modifications=modifications)
     _add_token_github("pyright", path=path, modifications=modifications)
     _add_token_github("pytest", path=path, modifications=modifications)
     _add_token_github("ruff", path=path, modifications=modifications)
@@ -54,6 +59,7 @@ def _run(*, path: PathLike = GITEA_PULL_REQUEST_YAML, sops: str | None = None) -
 
 def _add_index(
     name: str,
+    index: Index,
     /,
     *,
     path: PathLike = GITEA_PULL_REQUEST_YAML,
@@ -62,7 +68,7 @@ def _add_index(
     with _yield_pull_request_job_with(
         name, path=path, modifications=modifications
     ) as dict_:
-        dict_["index"] = PYPI_GITEA_READ_URL
+        dict_["index"] = SETTINGS.indexes.get_read_url(index, visible=False)
 
 
 def _add_token_github(
@@ -108,4 +114,4 @@ def _yield_pull_request_job_with(
 
 
 if __name__ == "__main__":
-    _main()
+    cli()

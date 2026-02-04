@@ -10,7 +10,6 @@ from pre_commit_hooks.constants import (
     PRE_COMMIT_CONFIG_YAML,
     PRE_COMMIT_PRIORITY,
     paths_argument,
-    python_option,
 )
 from pre_commit_hooks.utilities import (
     ensure_contains,
@@ -24,7 +23,8 @@ from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks.constants import PYPI_GITEA_READ_URL, QRT_PRE_COMMIT_HOOKS_URL
+from qrt_pre_commit_hooks._click import package_not_req_option
+from qrt_pre_commit_hooks._settings import SETTINGS
 
 if TYPE_CHECKING:
     from collections.abc import Callable, MutableSet
@@ -32,24 +32,28 @@ if TYPE_CHECKING:
 
     from utilities.types import PathLike
 
+    from qrt_pre_commit_hooks._enums import Index, Package
+
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@python_option
-def _main(*, paths: tuple[Path, ...], python: bool) -> None:
+@package_not_req_option
+def cli(*, paths: tuple[Path, ...], package: Package | None) -> None:
     if is_pytest():
         return
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, python=python) for p in paths
+        partial(_run, path=p, package=package) for p in paths
     ]
     run_all_maybe_raise(*funcs)
 
 
-def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML, python: bool = False) -> bool:
+def _run(
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
+) -> bool:
     modifications: set[Path] = set()
     _add_priority(path=path, modifications=modifications)
-    if python:
-        _add_pypi_gitea(path=path, modifications=modifications)
+    if package is not None:
+        _add_index(package.pkg_index, path=path, modifications=modifications)
     return len(modifications) == 0
 
 
@@ -60,13 +64,15 @@ def _add_priority(
 ) -> None:
     with yield_yaml_dict(path, modifications=modifications) as dict_:
         repos = get_set_list_dicts(dict_, "repos")
-        repo = get_set_partial_dict(repos, {"repo": QRT_PRE_COMMIT_HOOKS_URL})
+        repo = get_set_partial_dict(repos, {"repo": SETTINGS.url})
         hooks = get_set_list_dicts(repo, "hooks")
         hook = get_set_partial_dict(hooks, {"id": "add-qrt-hooks"})
         hook["priority"] = PRE_COMMIT_PRIORITY
 
 
-def _add_pypi_gitea(
+def _add_index(
+    index: Index,
+    /,
     *,
     path: PathLike = PRE_COMMIT_CONFIG_YAML,
     modifications: MutableSet[Path] | None = None,
@@ -77,8 +83,9 @@ def _add_pypi_gitea(
         hooks = get_set_list_dicts(repo, "hooks")
         hook = get_set_partial_dict(hooks, {"id": "add-hooks"})
         args = get_set_list_strs(hook, "args")
-        ensure_contains(args, f"--python-uv-index=gitea={PYPI_GITEA_READ_URL}")
+        url = SETTINGS.indexes.get_read_url(index)
+        ensure_contains(args, f"--python-uv-index=gitea={url}")
 
 
 if __name__ == "__main__":
-    _main()
+    cli()

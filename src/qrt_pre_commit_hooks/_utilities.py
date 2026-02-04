@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING
 
 from pre_commit_hooks.constants import GITEA_PULL_REQUEST_YAML
 from pre_commit_hooks.utilities import (
-    get_partial_dict,
     get_set_dict,
     get_set_list_dicts,
+    get_set_partial_dict,
     yield_yaml_dict,
 )
 
@@ -32,7 +32,7 @@ def yield_job_with(
         jobs = get_set_dict(dict_, "jobs")
         job = get_set_dict(jobs, job_name)
         steps = get_set_list_dicts(job, "steps")
-        step = get_partial_dict(steps, {"name": step_name, "uses": step_uses})
+        step = get_set_partial_dict(steps, {"name": step_name, "uses": step_uses})
         yield get_set_dict(step, "with")
 
 

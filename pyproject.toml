@@ -3,34 +3,36 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = ["dycw-utilities[test]>=0.188.12", "pyright>=1.1.408"]
+  dev = ["dycw-utilities[test]>=0.188.18", "pyright>=1.1.408"]
 
 [project]
   dependencies = [
     "click>=8.3.1",
-    "dycw-pre-commit-hooks>=0.14.129",
-    "dycw-utilities>=0.188.12",
+    "dycw-pre-commit-hooks>=0.14.130",
+    "dycw-utilities>=0.188.18",
+    "pydantic-settings-sops>=0.1.2",
   ]
   description = "Pre-commit hooks"
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.3.29"
+  version = "0.4.0"
 
   [project.optional-dependencies]
     cli = [
       "click==8.3.1",
-      "dycw-pre-commit-hooks==0.14.129",
-      "dycw-utilities==0.188.12",
+      "dycw-pre-commit-hooks==0.14.130",
+      "dycw-utilities==0.188.18",
+      "pydantic-settings-sops==0.1.2",
     ]
 
   [project.scripts]
-    add-qrt-hooks = "qrt_pre_commit_hooks.hooks.add_qrt_hooks:_main"
-    modify-ci-pull-request = "qrt_pre_commit_hooks.hooks.modify_ci_pull_request:_main"
-    modify-ci-push = "qrt_pre_commit_hooks.hooks.modify_ci_push:_main"
-    modify-direnv = "qrt_pre_commit_hooks.hooks.modify_direnv:_main"
-    modify-pre-commit = "qrt_pre_commit_hooks.hooks.modify_pre_commit:_main"
-    modify-pyproject = "qrt_pre_commit_hooks.hooks.modify_pyproject:_main"
+    add-qrt-hooks = "qrt_pre_commit_hooks.hooks._add_qrt_hooks:cli"
+    modify-ci-pull-request = "qrt_pre_commit_hooks.hooks._modify_ci_pull_request:cli"
+    modify-ci-push = "qrt_pre_commit_hooks.hooks._modify_ci_push:cli"
+    modify-direnv = "qrt_pre_commit_hooks.hooks._modify_direnv:cli"
+    modify-pre-commit = "qrt_pre_commit_hooks.hooks._modify_pre_commit:cli"
+    modify-pyproject = "qrt_pre_commit_hooks.hooks._modify_pyproject:cli"
 
 [tool]
   [tool.uv]

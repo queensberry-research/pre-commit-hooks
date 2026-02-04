@@ -2,17 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from pre_commit_hooks.constants import ENVRC
+from pre_commit_hooks.constants import PRE_COMMIT_CONFIG_YAML
 
-from qrt_pre_commit_hooks.hooks.modify_pre_commit import _run
+from qrt_pre_commit_hooks.hooks._modify_pre_commit import _run
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
-class TestModifyDirenv:
+class TestModifyPreCommit:
     def test_main(self, *, tmp_path: Path) -> None:
-        path = tmp_path / ENVRC
+        path = tmp_path / PRE_COMMIT_CONFIG_YAML
         for i in range(2):
             result = _run(path=path)
             expected = i >= 1

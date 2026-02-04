@@ -5,23 +5,16 @@ from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from click import command, option
-from pre_commit_hooks.constants import (
-    PRE_COMMIT_CONFIG_YAML,
-    paths_argument,
-    python_option,
-)
+from click import command
+from pre_commit_hooks.constants import PRE_COMMIT_CONFIG_YAML, paths_argument
 from pre_commit_hooks.hooks.add_hooks import _add_hook
 from pre_commit_hooks.utilities import run_all, run_all_maybe_raise
 from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks.constants import (
-    QRT_PRE_COMMIT_HOOKS_URL,
-    ci_nanode_option,
-    sops_option,
-)
+from qrt_pre_commit_hooks._click import package_req_option
+from qrt_pre_commit_hooks._settings import SETTINGS
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -29,87 +22,55 @@ if TYPE_CHECKING:
 
     from utilities.types import PathLike
 
+    from qrt_pre_commit_hooks._enums import Package
+
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@option("--ci", is_flag=True, default=False)
-@python_option
-@ci_nanode_option
-@sops_option
-def _main(
-    *,
-    paths: tuple[Path, ...],
-    ci: bool = False,
-    python: bool = False,
-    ci_nanode: bool = False,
-    sops: str | None = None,
-) -> None:
+@package_req_option
+def cli(*, paths: tuple[Path, ...], package: Package) -> None:
     if is_pytest():
         return
-    funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, ci=ci, python=python, ci_nanode=ci_nanode, sops=sops)
-        for p in paths
-    ]
+    funcs: list[Callable[[], bool]] = [partial(_run, package, path=p) for p in paths]
     run_all_maybe_raise(*funcs)
 
 
-def _run(
-    *,
-    path: PathLike = PRE_COMMIT_CONFIG_YAML,
-    ci: bool = False,
-    python: bool = False,
-    ci_nanode: bool = False,
-    sops: str | None = None,
-) -> bool:
+def _run(package: Package, /, *, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
     funcs: list[Callable[[], bool]] = [
-        partial(_add_modify_pre_commit, path=path, python=python)
+        partial(_add_modify_ci_pull_request, package, path=path),
+        partial(_add_modify_ci_push, path=path, package=package),
+        partial(_add_modify_pre_commit, path=path, package=package),
+        partial(_add_modify_pyproject, package, path=path),
+        partial(_add_modify_direnv, path=path, package=package),
     ]
-    if ci:
-        funcs.append(
-            partial(_add_modify_ci_push, path=path, python=python, ci_nanode=ci_nanode)
-        )
-    if ci and python:
-        funcs.append(partial(_add_modify_ci_pull_request, path=path, sops=sops))
-    if python:
-        funcs.append(partial(_add_modify_pyproject, path=path))
-    if sops:
-        funcs.append(partial(_add_modify_direnv, path=path, sops=sops))
     return run_all(*funcs)
 
 
 def _add_modify_ci_pull_request(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, sops: str | None = None
+    package: Package, /, *, path: PathLike = PRE_COMMIT_CONFIG_YAML
 ) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = []
-    if sops is not None:
-        args.append(f"--sops={sops}")
     _add_hook(
-        QRT_PRE_COMMIT_HOOKS_URL,
+        SETTINGS.url,
         "modify-ci-pull-request",
         path=path,
         modifications=modifications,
         rev=True,
-        args_exact=args if len(args) >= 1 else None,
+        args_exact=["--package", package.value],
         type_="editor",
     )
     return len(modifications) == 0
 
 
 def _add_modify_ci_push(
-    *,
-    path: PathLike = PRE_COMMIT_CONFIG_YAML,
-    ci_nanode: bool = False,
-    python: bool = False,
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
 ) -> bool:
     modifications: set[Path] = set()
     args: list[str] = []
-    if ci_nanode:
-        args.append("--ci-nanode")
-    if python:
-        args.append("--python")
+    if package is not None:
+        args.extend(["--package", package.value])
     _add_hook(
-        QRT_PRE_COMMIT_HOOKS_URL,
+        SETTINGS.url,
         "modify-ci-push",
         path=path,
         modifications=modifications,
@@ -121,14 +82,14 @@ def _add_modify_ci_push(
 
 
 def _add_modify_direnv(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, sops: str | None = None
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
 ) -> bool:
     modifications: set[Path] = set()
     args: list[str] = []
-    if sops is not None:
-        args.append(f"--sops={sops}")
+    if package is not None:
+        args.extend(["--package", package.value])
     _add_hook(
-        QRT_PRE_COMMIT_HOOKS_URL,
+        SETTINGS.url,
         "modify-direnv",
         path=path,
         modifications=modifications,
@@ -140,14 +101,14 @@ def _add_modify_direnv(
 
 
 def _add_modify_pre_commit(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, python: bool = False
+    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
 ) -> bool:
     modifications: set[Path] = set()
     args: list[str] = []
-    if python:
-        args.append("--python")
+    if package is not None:
+        args.extend(["--package", package.value])
     _add_hook(
-        QRT_PRE_COMMIT_HOOKS_URL,
+        SETTINGS.url,
         "modify-pre-commit",
         path=path,
         modifications=modifications,
@@ -158,18 +119,21 @@ def _add_modify_pre_commit(
     return len(modifications) == 0
 
 
-def _add_modify_pyproject(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+def _add_modify_pyproject(
+    package: Package, /, *, path: PathLike = PRE_COMMIT_CONFIG_YAML
+) -> bool:
     modifications: set[Path] = set()
     _add_hook(
-        QRT_PRE_COMMIT_HOOKS_URL,
+        SETTINGS.url,
         "modify-pyproject",
         path=path,
         modifications=modifications,
         rev=True,
+        args_exact=["--package", package.value],
         type_="editor",
     )
     return len(modifications) == 0
 
 
 if __name__ == "__main__":
-    _main()
+    cli()
