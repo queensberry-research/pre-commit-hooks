@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: "3.13"
           native-tls: true
-          token-github: ${{secrets.ACTION_TOKEN}}
           index: https://qrt:${{secrets.PYPI_NANODE_PASSWORD}}@pypi.queensberryresearch.com/simple
+          token-github: ${{secrets.ACTION_TOKEN}}
   pytest:
     env:
       CI: "1"
@@ -33,72 +33,9 @@ jobs:
           python-version: ${{matrix.python-version}}
           resolution: ${{matrix.resolution}}
           native-tls: true
-          token-github: ${{secrets.ACTION_TOKEN}}
-          sops-age-key: ${{secrets.SOPS_AGE_KEY}}
           index: https://qrt:${{secrets.PYPI_NANODE_PASSWORD}}@pypi.queensberryresearch.com/simple
-
-      # - name: Check out repo
-      #   uses: actions/checkout@v6
-      #
-      # - name: Install 'uv'
-      #   uses: astral-sh/setup-uv@v7
-      #   with:
-      #     github-token: ${{secrets.ACTION_TOKEN}}
-      #     python-version: ${{matrix.python-version}}
-      #     activate-environment: true
-      #
-      # - name: Install 'sops'
-      #   if: ${{secrets.SOPS_AGE_KEY != ''}}
-      #   run: |
-      #     set -euo pipefail
-      #     args=(uv tool run --from dycw-installer[cli]@latest --isolated --resolution highest --prerelease disallow --managed-python cli sops)
-      #     token_github="${{secrets.ACTION_TOKEN}}"
-      #     if [[ -n "${token_github}" ]]; then
-      #       args+=(--token "${token_github}")
-      #     fi
-      #     echo "[$(date +'%Y-%m-%d %H:%M:%S')] Running:"
-      #     printf '%q ' "${args[@]}"
-      #     echo
-      #     "${args[@]}"
-      #   shell: bash
-      #
-      # - name: Install 'age'
-      #   if: ${{secrets.SOPS_AGE_KEY != ''}}
-      #   run: |
-      #     set -euo pipefail
-      #     args=(uv tool run --from dycw-installer[cli]@latest --isolated --resolution highest --prerelease disallow --managed-python cli age)
-      #     token_github="${{secrets.ACTION_TOKEN}}"
-      #     if [[ -n "${token_github}" ]]; then
-      #       args+=(--token "${token_github}")
-      #     fi
-      #     echo "[$(date +'%Y-%m-%d %H:%M:%S')] Running:"
-      #     printf '%q ' "${args[@]}"
-      #     echo
-      #     "${args[@]}"
-      #   shell: bash
-      #
-      # - name: Run 'uv sync'
-      #   run: |
-      #     set -euo pipefail
-      #     args=(uv sync --all-extras --all-groups --active --frozen --index=https://qrt:${{secrets.PYPI_NANODE_PASSWORD}}@pypi.queensberryresearch.com/simple --resolution ${{matrix.resolution}} --prerelease disallow --reinstall --managed-python --native-tls)
-      #     echo "[$(date +'%Y-%m-%d %H:%M:%S')] Running:"
-      #     printf '%q ' "${args[@]}"
-      #     echo
-      #     "${args[@]}"
-      #   # env:
-      #   #   UV_INDEX: https://qrt:${{secrets.PYPI_NANODE_PASSWORD}}@pypi.queensberryresearch.com/simple
-      #   #   UV_RESOLUTION: ${{matrix.resolution}}
-      #   #   UV_NATIVE_TLS: true
-      #   # run: uv run --all-extras --all-groups --exact --with=pytest --with=pytest-xdist --reinstall --managed-python pytest --cov-report=term-missing --numprocesses auto
-      #   shell: bash
-      #
-      # - name: Run 'pytest'
-      #   env:
-      #     GITHUB_TOKEN: ${{secrets.ACTION_TOKEN}}
-      #     SOPS_AGE_KEY: ${{secrets.SOPS_AGE_KEY}}
-      #   run: pytest --cov-report=term-missing --numprocesses auto
-      #   shell: bash
-
+          sops-age-key: ${{secrets.SOPS_AGE_KEY}}
+          token-github: ${{secrets.ACTION_TOKEN}}
     strategy:
       fail-fast: false
       matrix:

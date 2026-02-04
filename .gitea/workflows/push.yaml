@@ -4,6 +4,15 @@ name: push
     branches:
       - master
 jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update CA certificates
+        run: sudo update-ca-certificates
+      - name: Tag the latest commit
+        uses: dycw/action-tag-commit@latest
+        with:
+          token-github: ${{secrets.ACTION_TOKEN}}
   publish:
     runs-on: ubuntu-latest
     steps:
@@ -25,17 +34,8 @@ jobs:
       - name: Build and publish the package
         uses: dycw/action-publish-package@latest
         with:
-          native-tls: true
           token-github: ${{secrets.ACTION_TOKEN}}
           username: qrt
           password: ${{secrets.PYPI_NANODE_PASSWORD}}
           publish-url: https://pypi.queensberryresearch.com
-  tag:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update CA certificates
-        run: sudo update-ca-certificates
-      - name: Tag the latest commit
-        uses: dycw/action-tag-commit@latest
-        with:
-          token-github: ${{secrets.ACTION_TOKEN}}
+          native-tls: true

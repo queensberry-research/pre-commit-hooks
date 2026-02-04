@@ -50,6 +50,7 @@ class TestModifyCIPullRequest:
                   uses: dycw/action-pytest@latest
                   with:
                     index: https://qrt-bot:${{secrets.PYPI_GITEA_READ_TOKEN}}@gitea.qrt:3000/api/packages/qrt/pypi/simple
+                    sops-age-key: ${{secrets.SOPS_AGE_KEY}}
                     token-github: ${{secrets.ACTION_TOKEN}}
               ruff:
                 runs-on: ubuntu-latest

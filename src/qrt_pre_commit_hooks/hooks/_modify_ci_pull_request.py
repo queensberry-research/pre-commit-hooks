@@ -39,21 +39,14 @@ def cli(*, paths: tuple[Path, ...], package: Package) -> None:
     run_all_maybe_raise(*funcs)
 
 
-def _run(
-    index: Index,
-    /,
-    *,
-    path: PathLike = GITEA_PULL_REQUEST_YAML,
-    sops: str | None = None,
-) -> bool:
+def _run(index: Index, /, *, path: PathLike = GITEA_PULL_REQUEST_YAML) -> bool:
     modifications: set[Path] = set()
     _add_index("pyright", index, path=path, modifications=modifications)
     _add_index("pytest", index, path=path, modifications=modifications)
+    _add_sops_age_key(path=path, modifications=modifications)
     _add_token_github("pyright", path=path, modifications=modifications)
     _add_token_github("pytest", path=path, modifications=modifications)
     _add_token_github("ruff", path=path, modifications=modifications)
-    if sops is not None:
-        _add_sops_age_key(path=path, modifications=modifications)
     return len(modifications) == 0
 
 
