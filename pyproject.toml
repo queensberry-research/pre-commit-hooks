@@ -3,26 +3,26 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = ["dycw-utilities[test]>=0.188.20", "pyright>=1.1.408"]
+  dev = ["dycw-utilities[test]>=0.188.21", "pyright>=1.1.408"]
 
 [project]
   dependencies = [
     "click>=8.3.1",
     "dycw-pre-commit-hooks>=0.14.138",
-    "dycw-utilities>=0.188.20",
+    "dycw-utilities>=0.188.21",
     "pydantic-settings>=2.12.0",
   ]
   description = "Pre-commit hooks"
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.4.17"
+  version = "0.4.18"
 
   [project.optional-dependencies]
     cli = [
       "click==8.3.1",
       "dycw-pre-commit-hooks==0.14.138",
-      "dycw-utilities==0.188.20",
+      "dycw-utilities==0.188.21",
       "pydantic-settings==2.12.0",
     ]
 
@@ -47,6 +47,7 @@
 
     [tool.uv.sources]
       gitea = { index = "nanode" }
+      ib-gateway-docker = { index = "nanode" }
       infra-redis = { index = "nanode" }
       infra-utilities = { index = "nanode" }
       mount = { index = "nanode" }
