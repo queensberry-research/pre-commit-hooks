@@ -17,6 +17,7 @@ packages = [
   { name = "testing", type = "trading" },
 
   { name = "gitea", type = "infra" },
+  { name = "ib-gateway-docker", type = "infra" },
   { name = "infra-redis", type = "infra" },
   { name = "infra-utilities", type = "infra" },
   { name = "mount", type = "infra" },
