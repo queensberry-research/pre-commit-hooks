@@ -3,26 +3,26 @@
   requires = ["uv_build"]
 
 [dependency-groups]
-  dev = ["dycw-utilities[test]>=0.188.21", "pyright>=1.1.408"]
+  dev = ["dycw-utilities[test]>=0.188.23", "pyright>=1.1.408"]
 
 [project]
   dependencies = [
     "click>=8.3.1",
     "dycw-pre-commit-hooks>=0.14.138",
-    "dycw-utilities>=0.188.21",
+    "dycw-utilities>=0.188.23",
     "pydantic-settings>=2.12.0",
   ]
   description = "Pre-commit hooks"
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.4.18"
+  version = "0.4.19"
 
   [project.optional-dependencies]
     cli = [
       "click==8.3.1",
       "dycw-pre-commit-hooks==0.14.138",
-      "dycw-utilities==0.188.21",
+      "dycw-utilities==0.188.23",
       "pydantic-settings==2.12.0",
     ]
 
@@ -52,4 +52,5 @@
       infra-utilities = { index = "nanode" }
       mount = { index = "nanode" }
       nanode = { index = "nanode" }
+      postgres = { index = "nanode" }
       proxmox = { index = "nanode" }
