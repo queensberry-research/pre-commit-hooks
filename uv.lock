@@ -157,7 +157,7 @@ wheels = [
 
 [[package]]
 name = "dycw-utilities"
-version = "0.188.23"
+version = "0.188.24"
 source = { registry = "https://pypi.queensberryresearch.com/simple" }
 dependencies = [
     { name = "coloredlogs" },
@@ -169,7 +169,7 @@ dependencies = [
     { name = "whenever" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/7d/7c49a96c2a46bce1cfdf8c2a5f483552169e6f58b974fcf1fb7a8eb7eb24/dycw_utilities-0.188.23-py3-none-any.whl", hash = "sha256:6083ee74d866f86ba87d0681a6bffd260fa6a0d4303000be374bfe3e84306d18", size = 211390, upload-time = "2026-02-07T04:18:56.907Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/61/0dda39b0040e46113d2e47ab6bc5c13017534500b6152e642b524b9a8185/dycw_utilities-0.188.24-py3-none-any.whl", hash = "sha256:82422887fd91ed6e956a86f36aaf4d330b8e72c634ddb620f7b1f01654d9c8d8", size = 211805, upload-time = "2026-02-08T11:19:10.232Z" },
 ]
 
 [package.optional-dependencies]
@@ -773,7 +773,7 @@ wheels = [
 
 [[package]]
 name = "qrt-pre-commit-hooks"
-version = "0.4.19"
+version = "0.4.20"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -802,8 +802,8 @@ requires-dist = [
     { name = "click", marker = "extra == 'cli'", specifier = "==8.3.1" },
     { name = "dycw-pre-commit-hooks", specifier = ">=0.14.138" },
     { name = "dycw-pre-commit-hooks", marker = "extra == 'cli'", specifier = "==0.14.138" },
-    { name = "dycw-utilities", specifier = ">=0.188.23" },
-    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.188.23" },
+    { name = "dycw-utilities", specifier = ">=0.188.24" },
+    { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.188.24" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
     { name = "pydantic-settings", marker = "extra == 'cli'", specifier = "==2.12.0" },
 ]
@@ -811,7 +811,7 @@ provides-extras = ["cli"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.188.23" },
+    { name = "dycw-utilities", extras = ["test"], specifier = ">=0.188.24" },
     { name = "pyright", specifier = ">=1.1.408" },
 ]
 
