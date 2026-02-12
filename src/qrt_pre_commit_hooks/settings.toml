@@ -18,6 +18,7 @@ packages = [
 
   { name = "backblaze", type = "infra" },
   { name = "gitea", type = "infra" },
+  { name = "gitea-runner", type = "infra" },
   { name = "ib-gateway-docker", type = "infra" },
   { name = "infra-redis", type = "infra" },
   { name = "infra-utilities", type = "infra" },
