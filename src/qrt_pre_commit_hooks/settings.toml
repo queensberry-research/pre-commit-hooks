@@ -20,11 +20,11 @@ packages = [
   { name = "gitea", type = "infra" },
   { name = "gitea-runner", type = "infra" },
   { name = "ib-gateway-docker", type = "infra" },
+  { name = "infra-postgres", type = "infra" },
   { name = "infra-redis", type = "infra" },
   { name = "infra-utilities", type = "infra" },
   { name = "mount", type = "infra" },
   { name = "nanode", type = "infra" },
-  { name = "postgres", type = "infra" },
   { name = "proxmox", type = "infra" },
 ]
 url = "https://github.com/queensberry-research/pre-commit-hooks"
