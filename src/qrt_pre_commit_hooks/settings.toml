@@ -23,6 +23,7 @@ packages = [
   { name = 'infra-postgres', type = 'infra' },
   { name = 'infra-redis', type = 'infra' },
   { name = 'infra-utilities', type = 'infra' },
+  { name = 'linode', type = 'infra' },
   { name = 'mount', type = 'infra' },
   { name = 'nanode', type = 'infra' },
   { name = 'proxmox', type = 'infra' },
@@ -31,8 +32,8 @@ packages = [
 
 
 [configs]
-  dockerfile_tmpl = "${files}/configs/Dockerfile"
-  root_pem_tmpl = "${files}/configs/root.pem"
+  dockerfile_tmpl = '${files}/configs/Dockerfile'
+  root_pem_tmpl = '${files}/configs/root.pem'
 
 
 [gitea]
