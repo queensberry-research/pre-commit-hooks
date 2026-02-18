@@ -22,6 +22,7 @@ from pre_commit_hooks.utilities import (
 )
 from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
+from utilities.pydantic import extract_secret
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks._click import package_option
@@ -81,12 +82,12 @@ def _add_index(
         settings = SETTINGS.indexes
         ensure_contains(
             args,
-            f"--ci-python-index-password-read={settings.password(index, ci=True)}",
-            f"--ci-python-index-password-write={settings.password(index, write=True, ci=True)}",
+            f"--ci-python-index-password-read={extract_secret(settings.password(index, ci=True))}",
+            f"--ci-python-index-password-write={extract_secret(settings.password(index, write=True, ci=True))}",
             f"--python-index-name={index.value}",
             f"--python-index-url={settings.url(index)}",
             f"--python-index-username={settings.username(index)}",
-            f"--python-index-password={settings.password(index, write=True)}",
+            f"--python-index-password={extract_secret(settings.password(index, write=True))}",
         )
 
 
