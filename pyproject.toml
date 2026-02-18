@@ -10,7 +10,7 @@
 [project]
   dependencies = [
     "click>=8.3.1",
-    "dycw-pre-commit-hooks>=0.15.21",
+    "dycw-pre-commit-hooks>=0.15.22",
     "dycw-utilities>=0.191.10",
     "pydantic-settings>=2.13.0",
   ]
@@ -18,13 +18,17 @@
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.5.17"
+  version = "0.5.18"
 
   [project.optional-dependencies]
     cli = [
       "click==8.3.1",
-      "dycw-pre-commit-hooks==0.15.21",
+      "click==8.3.1",
+      "dycw-pre-commit-hooks==0.15.22",
+      "dycw-pre-commit-hooks==0.15.22",
       "dycw-utilities==0.191.10",
+      "dycw-utilities==0.191.10",
+      "pydantic-settings==2.13.0",
       "pydantic-settings==2.13.0",
     ]
 

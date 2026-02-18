@@ -135,7 +135,7 @@ wheels = [
 
 [[package]]
 name = "dycw-pre-commit-hooks"
-version = "0.15.21"
+version = "0.15.22"
 source = { registry = "https://pypi.queensberryresearch.com/simple" }
 dependencies = [
     { name = "click" },
@@ -149,7 +149,7 @@ dependencies = [
     { name = "xdg-base-dirs" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/2a/8b6d800938f748d77d67cc9e1f4036ec255c0f43e2c5753812b6d394b2c5/dycw_pre_commit_hooks-0.15.21-py3-none-any.whl", hash = "sha256:c058a4e4220397adc01f738959a4d7593878e75adc3d9642af1b51a492ef60f4", size = 48027, upload-time = "2026-02-18T15:21:49.969Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/56/09114387107e550e50bb533df33c7eb8376c33a1911dfb93694f562d7de1/dycw_pre_commit_hooks-0.15.22-py3-none-any.whl", hash = "sha256:031cd2f8baa1770aa7558a50b5ff5fa44d1597f9b0ecc9c70df578aad32cdb98", size = 48105, upload-time = "2026-02-18T22:11:04.471Z" },
 ]
 
 [[package]]
@@ -782,7 +782,7 @@ wheels = [
 
 [[package]]
 name = "qrt-pre-commit-hooks"
-version = "0.5.17"
+version = "0.5.18"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -809,8 +809,8 @@ dev = [
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
     { name = "click", marker = "extra == 'cli'", specifier = "==8.3.1" },
-    { name = "dycw-pre-commit-hooks", specifier = ">=0.15.21" },
-    { name = "dycw-pre-commit-hooks", marker = "extra == 'cli'", specifier = "==0.15.21" },
+    { name = "dycw-pre-commit-hooks", specifier = ">=0.15.22" },
+    { name = "dycw-pre-commit-hooks", marker = "extra == 'cli'", specifier = "==0.15.22" },
     { name = "dycw-utilities", specifier = ">=0.191.10" },
     { name = "dycw-utilities", marker = "extra == 'cli'", specifier = "==0.191.10" },
     { name = "pydantic-settings", specifier = ">=2.13.0" },

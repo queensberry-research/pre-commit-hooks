@@ -141,8 +141,11 @@ def _add_setup_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
 def _get_package(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> Package | None:
     path_use = one(merge_paths(path, target=PYPROJECT_TOML))
     with yield_toml_doc(path_use) as doc:
-        project = get_table(doc, "project")
-    name = project["name"]
+        try:
+            project = get_table(doc, "project")
+            name = project["name"]
+        except KeyError:
+            return None
     try:
         return one(p.type for p in SETTINGS.packages if p.name == name)
     except OneEmptyError:

@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.15.21
+    rev: 0.15.22
     hooks:
       - id: add-hooks
         args:
@@ -70,6 +70,7 @@ repos:
           - --pytest-sops-age-key=${{secrets.SOPS_AGE_KEY}}
           - --python-version=3.13
           - --repo-name=pre-commit-hooks
+          - --set-up
           - --token-github=${{secrets.ACTION_TOKEN}}
         priority: 20
       - id: setup-ci-push
@@ -147,7 +148,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.16
+    rev: 0.5.17
     hooks:
       - id: add-qrt-hooks
         priority: 10
