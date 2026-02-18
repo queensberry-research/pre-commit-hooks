@@ -8,8 +8,8 @@ repos:
           - --ci-gitea
           - --ci-pytest-os=ubuntu-latest
           - --ci-pytest-sops-age-key=${{secrets.SOPS_AGE_KEY}}
-          - --ci-python-index-password-read=${{secrets.PYPI_NANODE_PASSWORD}}
-          - --ci-python-index-password-write=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --ci-python-index-password-read=${{secrets.NANODE_PYPI_PASSWORD}}
+          - --ci-python-index-password-write=${{secrets.NANODE_PYPI_PASSWORD}}
           - --ci-token-github=${{secrets.ACTION_TOKEN}}
           - --description=Pre-commit hooks
           - --prettier
@@ -56,7 +56,7 @@ repos:
         args:
           - --certificates
           - --gitea
-          - --index-password=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --index-password=${{secrets.NANODE_PYPI_PASSWORD}}
           - --index-username=qrt
           - --index=https://pypi.queensberryresearch.com/simple
           - --pytest-os=ubuntu-latest
@@ -70,7 +70,7 @@ repos:
           - --certificates
           - --gitea
           - --package
-          - --package-password=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --package-password=${{secrets.NANODE_PYPI_PASSWORD}}
           - --package-publish-url=https://pypi.queensberryresearch.com
           - --package-username=qrt
           - --token-github=${{secrets.ACTION_TOKEN}}
@@ -130,7 +130,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.3
+    rev: 0.5.4
     hooks:
       - id: add-qrt-hooks
         args:

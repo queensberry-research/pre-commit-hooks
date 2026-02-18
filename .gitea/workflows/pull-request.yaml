@@ -19,7 +19,7 @@ jobs:
           token-github: ${{secrets.ACTION_TOKEN}}
           index: https://pypi.queensberryresearch.com/simple
           index-username: qrt
-          index-password: ${{secrets.PYPI_NANODE_PASSWORD}}
+          index-password: ${{secrets.NANODE_PYPI_PASSWORD}}
   pytest:
     env:
       CI: "1"
@@ -39,7 +39,7 @@ jobs:
           token-github: ${{secrets.ACTION_TOKEN}}
           index: https://pypi.queensberryresearch.com/simple
           index-username: qrt
-          index-password: ${{secrets.PYPI_NANODE_PASSWORD}}
+          index-password: ${{secrets.NANODE_PYPI_PASSWORD}}
     strategy:
       fail-fast: false
       matrix:
