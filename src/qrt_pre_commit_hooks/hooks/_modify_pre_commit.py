@@ -86,7 +86,7 @@ def _add_index(
             f"--python-index-name={index.value}",
             f"--python-index-url={settings.url(index)}",
             f"--python-index-username={settings.username(index)}",
-            f"--python-index-password={extract_secret(settings.password(index, write=True))}",
+            f"--python-index-password={extract_secret(settings.password(index))}",
         )
 
 
