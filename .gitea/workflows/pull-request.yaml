@@ -14,12 +14,12 @@ jobs:
       - name: Run 'pyright'
         uses: dycw/action-pyright@latest
         with:
-          python-version: "3.13"
-          native-tls: true
           token-github: ${{secrets.ACTION_TOKEN}}
+          python-version: "3.13"
           index: https://pypi.queensberryresearch.com/simple
           index-username: qrt
           index-password: ${{secrets.NANODE_PYPI_PASSWORD}}
+          native-tls: true
   pytest:
     env:
       CI: "1"
@@ -32,14 +32,14 @@ jobs:
       - name: Run 'pytest'
         uses: dycw/action-pytest@latest
         with:
+          token-github: ${{secrets.ACTION_TOKEN}}
           python-version: ${{matrix.python-version}}
           sops-age-key: ${{secrets.SOPS_AGE_KEY}}
-          resolution: ${{matrix.resolution}}
-          native-tls: true
-          token-github: ${{secrets.ACTION_TOKEN}}
           index: https://pypi.queensberryresearch.com/simple
           index-username: qrt
           index-password: ${{secrets.NANODE_PYPI_PASSWORD}}
+          resolution: ${{matrix.resolution}}
+          native-tls: true
     strategy:
       fail-fast: false
       matrix:

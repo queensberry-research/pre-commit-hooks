@@ -6,13 +6,6 @@ repos:
         args:
           - --certificates
           - --ci-gitea
-          - --ci-image
-          - --ci-image-namespace=qrt
-          - --ci-image-registry-host=gitea.qrt
-          - --ci-image-registry-password=${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
-          - --ci-image-registry-port=3000
-          - --ci-image-registry-username=qrt-bot
-          - --ci-image-runs-on=host-linux
           - --ci-pytest-os=ubuntu-latest
           - --ci-pytest-sops-age-key=${{secrets.SOPS_AGE_KEY}}
           - --ci-python-index-password-read=${{secrets.NANODE_PYPI_PASSWORD}}
@@ -77,16 +70,6 @@ repos:
         args:
           - --certificates
           - --gitea
-          - --image
-          - --image-namespace=qrt
-          - --image-registry-host=gitea.qrt
-          - --image-registry-password=${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
-          - --image-registry-port=3000
-          - --image-registry-username=qrt-bot
-          - --image-runs-on=host-linux
-          - --image-uv-index-password=${{secrets.NANODE_PYPI_PASSWORD}}
-          - --image-uv-index-username=qrt
-          - --image-uv-index=https://pypi.queensberryresearch.com/simple
           - --package
           - --package-password=${{secrets.NANODE_PYPI_PASSWORD}}
           - --package-publish-url=https://pypi.queensberryresearch.com
@@ -148,7 +131,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.17
+    rev: 0.5.18
     hooks:
       - id: add-qrt-hooks
         priority: 10
@@ -162,14 +145,11 @@ repos:
         priority: 20
       - id: modify-pre-commit
         args:
-          - --ci-image
           - --package=infra
         priority: 10
       - id: modify-pyproject
         args:
           - --package=infra
-        priority: 20
-      - id: setup-docker
         priority: 20
   - repo: builtin
     hooks:
