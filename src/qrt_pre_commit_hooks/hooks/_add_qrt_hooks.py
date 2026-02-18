@@ -58,7 +58,7 @@ def _add_modify_ci_push(
     index: Index, /, *, path: PathLike = PRE_COMMIT_CONFIG_YAML
 ) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = to_args("--index", index)
+    args: list[str] = to_args("--index", index, join=True)
     _add_hook(
         QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-ci-push",
@@ -75,7 +75,7 @@ def _add_modify_direnv(
     *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
 ) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = to_args("--package", package)
+    args: list[str] = to_args("--package", package, join=True)
     _add_hook(
         QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-direnv",
@@ -92,7 +92,7 @@ def _add_modify_pre_commit(
     *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
 ) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = to_args("--package", package)
+    args: list[str] = to_args("--package", package, join=True)
     _add_hook(
         QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-pre-commit",
