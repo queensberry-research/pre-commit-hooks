@@ -152,10 +152,10 @@ def _get_package(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> Package | None:
 def _need_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
     path_use = one(merge_paths(path, target=PYPROJECT_TOML))
     with yield_toml_doc(path_use) as doc:
-        project = get_table(doc, "project")
-    try:
-        scripts = get_table(project, "scripts")
-    except KeyError:
-        return False
-    name = project["name"]
+        try:
+            project = get_table(doc, "project")
+            scripts = get_table(project, "scripts")
+            name = project["name"]
+        except KeyError:
+            return False
     return f"{name}-cli" in scripts

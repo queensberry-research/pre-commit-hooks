@@ -12,6 +12,7 @@ repos:
           - --ci-image-registry-password=${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
           - --ci-image-registry-port=3000
           - --ci-image-registry-username=qrt-bot
+          - --ci-image-runs-on=host-linux
           - --ci-pytest-os=ubuntu-latest
           - --ci-pytest-sops-age-key=${{secrets.SOPS_AGE_KEY}}
           - --ci-python-index-password-read=${{secrets.NANODE_PYPI_PASSWORD}}
@@ -81,6 +82,7 @@ repos:
           - --image-registry-password=${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
           - --image-registry-port=3000
           - --image-registry-username=qrt-bot
+          - --image-runs-on=host-linux
           - --image-uv-index-password=${{secrets.NANODE_PYPI_PASSWORD}}
           - --image-uv-index-username=qrt
           - --image-uv-index=https://pypi.queensberryresearch.com/simple
@@ -145,7 +147,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.14
+    rev: 0.5.16
     hooks:
       - id: add-qrt-hooks
         priority: 10
