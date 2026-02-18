@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from functools import partial
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from click import command
@@ -25,6 +24,7 @@ from qrt_pre_commit_hooks._settings import SETTINGS
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from pathlib import Path
 
     from utilities.types import PathLike
 
@@ -41,12 +41,13 @@ def cli(*, paths: tuple[Path, ...]) -> None:
 
 
 def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+    docker = _need_docker(path=path)
     package = _get_package(path=path)
     funcs: list[Callable[[], bool]] = [
         partial(_add_modify_direnv, path=path, package=package),
-        partial(_add_modify_pre_commit, path=path, package=package),
+        partial(_add_modify_pre_commit, path=path, ci_image=docker, package=package),
     ]
-    if _has_scripts(path=Path(path).parent / PYPROJECT_TOML):
+    if docker:
         funcs.append(partial(_add_setup_docker, path=path))
     if package is not None:
         funcs.append(partial(_add_modify_ci_push, package.pkg_index, path=path))
@@ -89,10 +90,13 @@ def _add_modify_direnv(
 
 
 def _add_modify_pre_commit(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
+    *,
+    path: PathLike = PRE_COMMIT_CONFIG_YAML,
+    ci_image: bool = False,
+    package: Package | None = None,
 ) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = to_args("--package", package, join=True)
+    args: list[str] = to_args("--ci-image", ci_image, "--package", package)
     _add_hook(
         QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-pre-commit",
@@ -145,11 +149,12 @@ def _get_package(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> Package | None:
         return None
 
 
-def _has_scripts(*, path: PathLike = PYPROJECT_TOML) -> bool:
-    with yield_toml_doc(path) as doc:
+def _need_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+    path_use = one(merge_paths(path, target=PYPROJECT_TOML))
+    with yield_toml_doc(path_use) as doc:
         project = get_table(doc, "project")
-        try:
-            _ = get_table(project, "scripts")
-        except KeyError:
-            return False
-        return True
+    try:
+        _ = get_table(project, "scripts")
+    except KeyError:
+        return False
+    return True

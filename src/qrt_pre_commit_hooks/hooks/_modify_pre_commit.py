@@ -14,7 +14,7 @@ from pre_commit_hooks.utilities import (
     run_all_maybe_raise,
     yield_yaml_dict,
 )
-from utilities.click import CONTEXT_SETTINGS
+from utilities.click import CONTEXT_SETTINGS, flag
 from utilities.core import is_pytest
 from utilities.pydantic import extract_secret
 from utilities.types import PathLike
@@ -39,26 +39,48 @@ if TYPE_CHECKING:
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
+@flag("--ci-image", default=False)
 @package_option
-def cli(*, paths: tuple[Path, ...], package: Package | None) -> None:
+def cli(*, paths: tuple[Path, ...], ci_image: bool, package: Package | None) -> None:
     if is_pytest():
         return
     funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, package=package) for p in paths
+        partial(_run, path=p, ci_image=ci_image, package=package) for p in paths
     ]
     run_all_maybe_raise(*funcs)
 
 
 def _run(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
+    *,
+    path: PathLike = PRE_COMMIT_CONFIG_YAML,
+    ci_image: bool = False,
+    package: Package | None = None,
 ) -> bool:
     modifications: set[Path] = set()
     _add_ci_token_github(path=path, modifications=modifications)
     _add_pytest_sops_age_key(path=path, modifications=modifications)
     _add_priority(path=path, modifications=modifications)
+    if ci_image:
+        _add_ci_image(path=path, modifications=modifications)
     if package is not None:
         _add_index(package.pkg_index, path=path, modifications=modifications)
     return len(modifications) == 0
+
+
+def _add_ci_image(
+    *,
+    path: PathLike = PRE_COMMIT_CONFIG_YAML,
+    modifications: MutableSet[Path] | None = None,
+) -> None:
+    with yield_add_hooks_args(path=path, modifications=modifications) as args:
+        ensure_contains(
+            args,
+            f"--ci-image-registry-host={SETTINGS.gitea.host}",
+            f"--ci-image-registry-port={SETTINGS.gitea.port}",
+            f"--ci-image-registry-registry-username={SETTINGS.gitea.username}",
+            f"--ci-image-registry-registry-password={SETTINGS.gitea.passwords.write}",
+            f"--ci-image-namespace={SETTINGS.gitea.owner}",
+        )
 
 
 def _add_ci_token_github(

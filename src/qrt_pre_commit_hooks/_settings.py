@@ -56,6 +56,13 @@ class _GiteaSettings(BaseSettings):
     host: str
     port: int
     owner: str
+    username: str
+    passwords: _GiteaPasswordsSettings
+
+
+class _GiteaPasswordsSettings(BaseSettings):
+    read: SecretStr
+    write: SecretStr
 
 
 class _IndexesSettings(BaseSettings):
@@ -74,7 +81,7 @@ class _IndexesSettings(BaseSettings):
     def username(self, index: Index, /) -> str:
         match index:
             case Index.gitea:
-                return self.gitea.username
+                return SETTINGS.gitea.username
             case Index.nanode:
                 return self.nanode.username
             case never:
@@ -85,11 +92,11 @@ class _IndexesSettings(BaseSettings):
     ) -> SecretLike:
         match index, write, ci:
             case Index.gitea, False, False:
-                return self.gitea.passwords.read
+                return SETTINGS.gitea.passwords.read
             case Index.gitea, False, True:
                 return GITEA_READ_TOKEN
             case Index.gitea, True, False:
-                return self.gitea.passwords.write
+                return SETTINGS.gitea.passwords.write
             case Index.gitea, True, True:
                 return GITEA_READ_WRITE_TOKEN
             case Index.nanode, _, False:
@@ -102,8 +109,6 @@ class _IndexesSettings(BaseSettings):
 
 class _IndexesGiteaSettings(BaseSettings):
     url_tmpl: str
-    username: str
-    passwords: _IndexesGiteaPasswordsSettings
 
     @property
     def url(self) -> str:
@@ -113,11 +118,6 @@ class _IndexesGiteaSettings(BaseSettings):
             port=SETTINGS.gitea.port,
             owner=SETTINGS.gitea.owner,
         )
-
-
-class _IndexesGiteaPasswordsSettings(BaseSettings):
-    read: SecretStr
-    write: SecretStr
 
 
 class _IndexesNanodeSettings(BaseSettings):

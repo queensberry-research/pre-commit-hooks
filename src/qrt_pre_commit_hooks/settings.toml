@@ -39,16 +39,16 @@ packages = [
   host = 'gitea.qrt'
   owner = 'qrt'
   port = 3000
+  username = 'qrt-bot'
+
+  [gitea.passwords]
+    read = 'e43d1df41a3ecf96e4adbaf04e98cfaf094d253e'
+    write = '91e7f1608190d16c80aa4e5070a22939adccb699'
 
 
 [indexes]
   [indexes.gitea]
     url_tmpl = 'https://${host}:${port}/api/packages/${owner}/pypi'
-    username = 'qrt-bot'
-
-    [indexes.gitea.passwords]
-      read = 'e43d1df41a3ecf96e4adbaf04e98cfaf094d253e'
-      write = '91e7f1608190d16c80aa4e5070a22939adccb699'
 
   [indexes.nanode]
     password = 'lending0safety0email'
