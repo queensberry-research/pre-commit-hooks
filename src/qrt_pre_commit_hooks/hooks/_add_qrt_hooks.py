@@ -96,7 +96,7 @@ def _add_modify_pre_commit(
     package: Package | None = None,
 ) -> bool:
     modifications: set[Path] = set()
-    args: list[str] = to_args("--ci-image", ci_image, "--package", package)
+    args: list[str] = to_args("--ci-image", ci_image, "--package", package, join=True)
     _add_hook(
         QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-pre-commit",

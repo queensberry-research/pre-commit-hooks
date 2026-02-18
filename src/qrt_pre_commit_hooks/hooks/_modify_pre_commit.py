@@ -78,7 +78,7 @@ def _add_ci_image(
             f"--ci-image-registry-host={SETTINGS.gitea.host}",
             f"--ci-image-registry-port={SETTINGS.gitea.port}",
             f"--ci-image-registry-registry-username={SETTINGS.gitea.username}",
-            f"--ci-image-registry-registry-password={SETTINGS.gitea.passwords.write}",
+            f"--ci-image-registry-registry-password={extract_secret(SETTINGS.gitea.passwords.write)}",
             f"--ci-image-namespace={SETTINGS.gitea.owner}",
         )
 

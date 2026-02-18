@@ -130,7 +130,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.9
+    rev: 0.5.10
     hooks:
       - id: add-qrt-hooks
         priority: 10
@@ -144,6 +144,7 @@ repos:
         priority: 20
       - id: modify-pre-commit
         args:
+          - --ci-image
           - --package=infra
         priority: 10
       - id: modify-pyproject
