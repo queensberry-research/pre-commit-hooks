@@ -77,6 +77,7 @@ def _add_ci_image(
         ensure_contains(
             args,
             "--ci-image",
+            "--ci-image-runs-on=host-linux",
             f"--ci-image-registry-host={SETTINGS.gitea.host}",
             f"--ci-image-registry-port={SETTINGS.gitea.port}",
             f"--ci-image-registry-username={SETTINGS.gitea.username}",

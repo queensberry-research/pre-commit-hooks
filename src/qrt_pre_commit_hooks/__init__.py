@@ -25,7 +25,7 @@ from qrt_pre_commit_hooks._enums import Index, Package
 from qrt_pre_commit_hooks._settings import SETTINGS
 from qrt_pre_commit_hooks._utilities import yield_add_hooks_args
 
-__version__ = "0.5.14"
+__version__ = "0.5.15"
 
 
 set_up_logging(__name__, files=".logs", log_version=__version__)
