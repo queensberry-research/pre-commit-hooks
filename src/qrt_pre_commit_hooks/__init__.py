@@ -22,7 +22,7 @@ from qrt_pre_commit_hooks._enums import Index, Package
 from qrt_pre_commit_hooks._settings import SETTINGS
 from qrt_pre_commit_hooks._utilities import yield_job_with
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 
 set_up_logging(__name__, files=".logs", log_version=__version__)
