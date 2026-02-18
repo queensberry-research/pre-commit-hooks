@@ -154,7 +154,8 @@ def _need_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
     with yield_toml_doc(path_use) as doc:
         project = get_table(doc, "project")
     try:
-        _ = get_table(project, "scripts")
+        scripts = get_table(project, "scripts")
     except KeyError:
         return False
-    return True
+    name = project["name"]
+    return f"{name}-cli" in scripts
