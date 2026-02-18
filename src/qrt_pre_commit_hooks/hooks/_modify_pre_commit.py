@@ -22,6 +22,7 @@ from utilities.types import PathLike
 from qrt_pre_commit_hooks._click import package_option
 from qrt_pre_commit_hooks._constants import (
     ACTION_TOKEN,
+    GITEA_READ_WRITE_TOKEN,
     QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
     SOPS_AGE_KEY,
 )
@@ -77,8 +78,8 @@ def _add_ci_image(
             args,
             f"--ci-image-registry-host={SETTINGS.gitea.host}",
             f"--ci-image-registry-port={SETTINGS.gitea.port}",
-            f"--ci-image-registry-registry-username={SETTINGS.gitea.username}",
-            f"--ci-image-registry-registry-password={extract_secret(SETTINGS.gitea.passwords.write)}",
+            f"--ci-image-registry-username={SETTINGS.gitea.username}",
+            f"--ci-image-registry-password={GITEA_READ_WRITE_TOKEN}",
             f"--ci-image-namespace={SETTINGS.gitea.owner}",
         )
 
