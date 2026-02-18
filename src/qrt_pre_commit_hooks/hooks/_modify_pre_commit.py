@@ -1,21 +1,15 @@
 from __future__ import annotations
 
-from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from click import command
 from pre_commit_hooks.click import paths_argument
-from pre_commit_hooks.constants import (
-    DYCW_PRE_COMMIT_HOOKS_URL,
-    PRE_COMMIT_CONFIG_YAML,
-    PRE_COMMIT_PRIORITY,
-)
+from pre_commit_hooks.constants import PRE_COMMIT_CONFIG_YAML, PRE_COMMIT_PRIORITY
 from pre_commit_hooks.utilities import (
     ensure_contains,
     get_set_list_dicts,
-    get_set_list_strs,
     get_set_partial_dict,
     run_all_maybe_raise,
     yield_yaml_dict,
@@ -26,11 +20,16 @@ from utilities.pydantic import extract_secret
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks._click import package_option
-from qrt_pre_commit_hooks._constants import ACTION_TOKEN, SOPS_AGE_KEY
+from qrt_pre_commit_hooks._constants import (
+    ACTION_TOKEN,
+    QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
+    SOPS_AGE_KEY,
+)
 from qrt_pre_commit_hooks._settings import SETTINGS
+from qrt_pre_commit_hooks._utilities import yield_add_hooks_args
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator, MutableSet
+    from collections.abc import Callable, MutableSet
     from pathlib import Path
 
     from utilities.types import PathLike
@@ -67,7 +66,7 @@ def _add_ci_token_github(
     path: PathLike = PRE_COMMIT_CONFIG_YAML,
     modifications: MutableSet[Path] | None = None,
 ) -> None:
-    with _yield_add_hooks_args(path=path, modifications=modifications) as args:
+    with yield_add_hooks_args(path=path, modifications=modifications) as args:
         ensure_contains(args, f"--ci-token-github={ACTION_TOKEN}")
 
 
@@ -78,7 +77,7 @@ def _add_index(
     path: PathLike = PRE_COMMIT_CONFIG_YAML,
     modifications: MutableSet[Path] | None = None,
 ) -> None:
-    with _yield_add_hooks_args(path=path, modifications=modifications) as args:
+    with yield_add_hooks_args(path=path, modifications=modifications) as args:
         settings = SETTINGS.indexes
         ensure_contains(
             args,
@@ -98,7 +97,9 @@ def _add_priority(
 ) -> None:
     with yield_yaml_dict(path, modifications=modifications) as dict_:
         repos = get_set_list_dicts(dict_, "repos")
-        repo = get_set_partial_dict(repos, {"repo": SETTINGS.url})
+        repo = get_set_partial_dict(
+            repos, {"repo": QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL}
+        )
         hooks = get_set_list_dicts(repo, "hooks")
         hook = get_set_partial_dict(hooks, {"id": "add-qrt-hooks"})
         hook["priority"] = PRE_COMMIT_PRIORITY
@@ -109,23 +110,5 @@ def _add_pytest_sops_age_key(
     path: PathLike = PRE_COMMIT_CONFIG_YAML,
     modifications: MutableSet[Path] | None = None,
 ) -> None:
-    with _yield_add_hooks_args(path=path, modifications=modifications) as args:
+    with yield_add_hooks_args(path=path, modifications=modifications) as args:
         ensure_contains(args, f"--ci-pytest-sops-age-key={SOPS_AGE_KEY}")
-
-
-@contextmanager
-def _yield_add_hooks_args(
-    *,
-    path: PathLike = PRE_COMMIT_CONFIG_YAML,
-    modifications: MutableSet[Path] | None = None,
-) -> Iterator[list[str]]:
-    with yield_yaml_dict(path, modifications=modifications) as dict_:
-        repos = get_set_list_dicts(dict_, "repos")
-        repo = get_set_partial_dict(repos, {"repo": DYCW_PRE_COMMIT_HOOKS_URL})
-        hooks = get_set_list_dicts(repo, "hooks")
-        hook = get_set_partial_dict(hooks, {"id": "add-hooks"})
-        yield get_set_list_strs(hook, "args")
-
-
-if __name__ == "__main__":
-    cli()

@@ -13,16 +13,19 @@ from qrt_pre_commit_hooks._click import (
 )
 from qrt_pre_commit_hooks._constants import (
     ACTION_TOKEN,
+    DOCKERFILE,
     GITEA_READ_TOKEN,
     GITEA_READ_WRITE_TOKEN,
     NANODE_PYPI_PASSWORD,
+    QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
+    ROOT_PEM,
     SOPS_AGE_KEY,
 )
 from qrt_pre_commit_hooks._enums import Index, Package
 from qrt_pre_commit_hooks._settings import SETTINGS
-from qrt_pre_commit_hooks._utilities import yield_job_with
+from qrt_pre_commit_hooks._utilities import yield_add_hooks_args
 
-__version__ = "0.5.5"
+__version__ = "0.5.6"
 
 
 set_up_logging(__name__, files=".logs", log_version=__version__)
@@ -33,9 +36,12 @@ sys.excepthook = make_except_hook(
 
 __all__ = [
     "ACTION_TOKEN",
+    "DOCKERFILE",
     "GITEA_READ_TOKEN",
     "GITEA_READ_WRITE_TOKEN",
     "NANODE_PYPI_PASSWORD",
+    "QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL",
+    "ROOT_PEM",
     "SETTINGS",
     "SOPS_AGE_KEY",
     "Index",
@@ -43,5 +49,5 @@ __all__ = [
     "index_req_option",
     "package_option",
     "package_req_option",
-    "yield_job_with",
+    "yield_add_hooks_args",
 ]

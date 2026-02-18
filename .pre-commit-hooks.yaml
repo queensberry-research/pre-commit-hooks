@@ -27,3 +27,9 @@
   entry: modify-pyproject
   language: python
   files: (^\.pre-commit-config\.yaml|pyproject\.toml)$
+
+- id: setup-docker
+  name: setup-docker
+  entry: setup-docker
+  language: python
+  files: ^(\.pre-commit-config\.yaml|docker/Dockerfile)$

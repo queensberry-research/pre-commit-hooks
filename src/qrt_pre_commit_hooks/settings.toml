@@ -28,7 +28,11 @@ packages = [
   { name = 'proxmox', type = 'infra' },
   { name = 'qrt-pre-commit-hooks', type = 'infra' },
 ]
-url = 'https://github.com/queensberry-research/pre-commit-hooks'
+
+
+[configs]
+  dockerfile_tmpl = "${files}/configs/Dockerfile"
+  root_pem_tmpl = "${files}/configs/root.pem"
 
 
 [gitea]

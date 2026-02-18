@@ -7,19 +7,23 @@ from typing import TYPE_CHECKING
 
 from click import command
 from pre_commit_hooks.click import paths_argument
-from pre_commit_hooks.constants import PRE_COMMIT_CONFIG_YAML
+from pre_commit_hooks.constants import PRE_COMMIT_CONFIG_YAML, PYPROJECT_TOML
 from pre_commit_hooks.hooks.add_hooks import _add_hook
-from pre_commit_hooks.utilities import run_all, run_all_maybe_raise
+from pre_commit_hooks.utilities import (
+    get_table,
+    run_all,
+    run_all_maybe_raise,
+    yield_toml_doc,
+)
 from utilities.click import CONTEXT_SETTINGS, to_args
 from utilities.core import is_pytest
 from utilities.types import PathLike
 
 from qrt_pre_commit_hooks._click import package_option
-from qrt_pre_commit_hooks._settings import SETTINGS
+from qrt_pre_commit_hooks._constants import QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from pathlib import Path
 
     from utilities.types import PathLike
 
@@ -45,6 +49,8 @@ def _run(
         partial(_add_modify_direnv, path=path, package=package),
         partial(_add_modify_pre_commit, path=path, package=package),
     ]
+    if _has_scripts(path=Path(path).parent / PYPROJECT_TOML):
+        funcs.append(partial(_add_setup_docker, path=path))
     if package is not None:
         funcs.append(partial(_add_modify_ci_push, package.pkg_index, path=path))
         funcs.append(partial(_add_modify_pyproject, package, path=path))
@@ -57,12 +63,12 @@ def _add_modify_ci_push(
     modifications: set[Path] = set()
     args: list[str] = to_args("--index", index)
     _add_hook(
-        SETTINGS.url,
+        QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-ci-push",
         path=path,
         modifications=modifications,
         rev=True,
-        args=args,
+        args=args if len(args) >= 1 else None,
         type_="editor",
     )
     return len(modifications) == 0
@@ -74,12 +80,12 @@ def _add_modify_direnv(
     modifications: set[Path] = set()
     args: list[str] = to_args("--package", package)
     _add_hook(
-        SETTINGS.url,
+        QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-direnv",
         path=path,
         modifications=modifications,
         rev=True,
-        args=args,
+        args=args if len(args) >= 1 else None,
         type_="editor",
     )
     return len(modifications) == 0
@@ -91,12 +97,12 @@ def _add_modify_pre_commit(
     modifications: set[Path] = set()
     args: list[str] = to_args("--package", package)
     _add_hook(
-        SETTINGS.url,
+        QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-pre-commit",
         path=path,
         modifications=modifications,
         rev=True,
-        args=args,
+        args=args if len(args) >= 1 else None,
         type_="pre-commit",
     )
     return len(modifications) == 0
@@ -107,7 +113,7 @@ def _add_modify_pyproject(
 ) -> bool:
     modifications: set[Path] = set()
     _add_hook(
-        SETTINGS.url,
+        QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
         "modify-pyproject",
         path=path,
         modifications=modifications,
@@ -118,5 +124,24 @@ def _add_modify_pyproject(
     return len(modifications) == 0
 
 
-if __name__ == "__main__":
-    cli()
+def _add_setup_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+    modifications: set[Path] = set()
+    _add_hook(
+        QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL,
+        "setup-docker",
+        path=path,
+        modifications=modifications,
+        rev=True,
+        type_="editor",
+    )
+    return len(modifications) == 0
+
+
+def _has_scripts(*, path: PathLike = PYPROJECT_TOML) -> bool:
+    with yield_toml_doc(path) as doc:
+        project = get_table(doc, "project")
+        try:
+            _ = get_table(project, "scripts")
+        except KeyError:
+            return False
+        return True

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pre_commit_hooks.constants import ENVRC, PRE_COMMIT_CONFIG_YAML, PYPROJECT_TOML
 from pytest import mark, param
-from utilities.constants import HOUR
+from utilities.constants import MINUTE
 from utilities.pytest import throttle_test
 from utilities.subprocess import run
 
@@ -32,8 +32,9 @@ class TestCLI:
                 "modify-pyproject",
                 [str(PYPROJECT_TOML), "--package", Package.trading.value],
             ),
+            param("setup-docker", [str(PYPROJECT_TOML)]),
         ],
     )
-    @throttle_test(duration=HOUR)
+    @throttle_test(duration=5 * MINUTE)
     def test_main(self, *, hook: str, args: list[str]) -> None:
         run(hook, *args)

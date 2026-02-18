@@ -64,7 +64,3 @@ def _add_sources(
         for package_i in sorted(SETTINGS.packages, key=lambda x: x.name):
             if package_i.type is package:
                 sources[package_i.name] = inner
-
-
-if __name__ == "__main__":
-    cli()

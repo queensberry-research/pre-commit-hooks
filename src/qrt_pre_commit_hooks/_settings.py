@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from pathlib import Path
 from typing import ClassVar, assert_never
 
 from pydantic import SecretStr
@@ -32,10 +33,23 @@ class _Settings(CustomBaseSettings):
         _FILES.joinpath(_SETTINGS_TOML),
     ]
 
+    configs: _ConfigsSettings
     gitea: _GiteaSettings
     indexes: _IndexesSettings
     packages: list[_Package1Settings]
-    url: str
+
+
+class _ConfigsSettings(BaseSettings):
+    dockerfile_tmpl: str
+    root_pem_tmpl: str
+
+    @property
+    def dockerfile(self) -> Path:
+        return Path(substitute(self.dockerfile_tmpl, files=_FILES))
+
+    @property
+    def root_pem(self) -> Path:
+        return Path(substitute(self.root_pem_tmpl, files=_FILES))
 
 
 class _GiteaSettings(BaseSettings):
