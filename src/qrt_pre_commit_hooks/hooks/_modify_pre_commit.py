@@ -76,6 +76,7 @@ def _add_ci_image(
     with yield_add_hooks_args(path=path, modifications=modifications) as args:
         ensure_contains(
             args,
+            "--ci-image",
             f"--ci-image-registry-host={SETTINGS.gitea.host}",
             f"--ci-image-registry-port={SETTINGS.gitea.port}",
             f"--ci-image-registry-username={SETTINGS.gitea.username}",
