@@ -28,7 +28,7 @@ class TestModifyCIPush:
                     token-github: ${{secrets.ACTION_TOKEN}}
                     username: qrt-bot
                     password: ${{secrets.PYPI_GITEA_READ_WRITE_TOKEN}}
-                    publish_url: https://gitea.qrt:3000/api/packages/qrt/pypi
+                    publish-url: https://gitea.qrt:3000/api/packages/qrt/pypi
                     native-tls: true
         """)
         for i in range(2):

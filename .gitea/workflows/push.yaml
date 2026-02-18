@@ -21,12 +21,11 @@ jobs:
       - name: Build and publish the package
         uses: dycw/action-publish-package@latest
         with:
-          publish-url: https://pypi.queensberryresearch.com
           native-tls: true
           token-github: ${{secrets.ACTION_TOKEN}}
-          password: ${{secrets.PYPI_NANODE_PASSWORD}}
           username: qrt
-          publish_url: https://pypi.queensberryresearch.com
+          password: ${{secrets.PYPI_NANODE_PASSWORD}}
+          publish-url: https://pypi.queensberryresearch.com
   publish-package-gitea:
     runs-on: ubuntu-latest
     steps:
