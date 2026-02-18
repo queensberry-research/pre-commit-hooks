@@ -13,10 +13,7 @@ class TestCLI:
     @mark.parametrize(
         ("hook", "args"),
         [
-            param(
-                "add-qrt-hooks",
-                [str(PRE_COMMIT_CONFIG_YAML), "--package", Package.trading.value],
-            ),
+            param("add-qrt-hooks", [str(PRE_COMMIT_CONFIG_YAML)]),
             param(
                 "modify-ci-push",
                 [str(PRE_COMMIT_CONFIG_YAML), "--index", Index.gitea.value],

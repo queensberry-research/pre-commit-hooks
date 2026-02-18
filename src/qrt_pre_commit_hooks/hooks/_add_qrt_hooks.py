@@ -11,16 +11,17 @@ from pre_commit_hooks.constants import PRE_COMMIT_CONFIG_YAML, PYPROJECT_TOML
 from pre_commit_hooks.hooks.add_hooks import _add_hook
 from pre_commit_hooks.utilities import (
     get_table,
+    merge_paths,
     run_all,
     run_all_maybe_raise,
     yield_toml_doc,
 )
 from utilities.click import CONTEXT_SETTINGS, to_args
-from utilities.core import is_pytest
+from utilities.core import OneEmptyError, is_pytest, one
 from utilities.types import PathLike
 
-from qrt_pre_commit_hooks._click import package_option
 from qrt_pre_commit_hooks._constants import QUEENSBERRY_RESEARCH_PRE_COMMIT_HOOKS_URL
+from qrt_pre_commit_hooks._settings import SETTINGS
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -32,19 +33,15 @@ if TYPE_CHECKING:
 
 @command(**CONTEXT_SETTINGS)
 @paths_argument
-@package_option
-def cli(*, paths: tuple[Path, ...], package: Package | None) -> None:
+def cli(*, paths: tuple[Path, ...]) -> None:
     if is_pytest():
         return
-    funcs: list[Callable[[], bool]] = [
-        partial(_run, path=p, package=package) for p in paths
-    ]
+    funcs: list[Callable[[], bool]] = [partial(_run, path=p) for p in paths]
     run_all_maybe_raise(*funcs)
 
 
-def _run(
-    *, path: PathLike = PRE_COMMIT_CONFIG_YAML, package: Package | None = None
-) -> bool:
+def _run(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
+    package = _get_package(path=path)
     funcs: list[Callable[[], bool]] = [
         partial(_add_modify_direnv, path=path, package=package),
         partial(_add_modify_pre_commit, path=path, package=package),
@@ -135,6 +132,17 @@ def _add_setup_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
         type_="editor",
     )
     return len(modifications) == 0
+
+
+def _get_package(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> Package | None:
+    path_use = one(merge_paths(path, target=PYPROJECT_TOML))
+    with yield_toml_doc(path_use) as doc:
+        project = get_table(doc, "project")
+    name = project["name"]
+    try:
+        return one(p.type for p in SETTINGS.packages if p.name == name)
+    except OneEmptyError:
+        return None
 
 
 def _has_scripts(*, path: PathLike = PYPROJECT_TOML) -> bool:

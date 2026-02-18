@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.15.16
+    rev: 0.15.17
     hooks:
       - id: add-hooks
         args:
@@ -130,7 +130,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.5
+    rev: 0.5.7
     hooks:
       - id: add-qrt-hooks
         args:
@@ -154,6 +154,8 @@ repos:
       - id: modify-pyproject
         args:
           - --package=infra
+        priority: 20
+      - id: setup-docker
         priority: 20
   - repo: builtin
     hooks:
