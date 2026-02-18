@@ -6,6 +6,7 @@ repos:
         args:
           - --certificates
           - --ci-gitea
+          - --ci-image
           - --ci-image-namespace=qrt
           - --ci-image-registry-host=gitea.qrt
           - --ci-image-registry-password=${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
@@ -74,6 +75,15 @@ repos:
         args:
           - --certificates
           - --gitea
+          - --image
+          - --image-namespace=qrt
+          - --image-registry-host=gitea.qrt
+          - --image-registry-password=${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
+          - --image-registry-port=3000
+          - --image-registry-username=qrt-bot
+          - --image-uv-index-password=${{secrets.NANODE_PYPI_PASSWORD}}
+          - --image-uv-index-username=qrt
+          - --image-uv-index=https://pypi.queensberryresearch.com/simple
           - --package
           - --package-password=${{secrets.NANODE_PYPI_PASSWORD}}
           - --package-publish-url=https://pypi.queensberryresearch.com
@@ -135,7 +145,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.12
+    rev: 0.5.13
     hooks:
       - id: add-qrt-hooks
         priority: 10

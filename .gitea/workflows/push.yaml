@@ -39,3 +39,22 @@ jobs:
           password: ${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
           publish-url: https://gitea.qrt:3000/api/packages/qrt/pypi
           native-tls: true
+  publish-image:
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Update CA certificates
+        run: sudo update-ca-certificates
+      - name: Build and publish the image
+        uses: dycw/action-publish-image@latest
+        with:
+          token-github: ${{secrets.ACTION_TOKEN}}
+          registry-host: gitea.qrt
+          registry-port: 3000
+          registry-username: qrt-bot
+          registry-password: ${{secrets.QRT_GITEA_READ_WRITE_TOKEN}}
+          namespace: qrt
+          uv-index: https://pypi.queensberryresearch.com/simple
+          uv-index-username: qrt
+          uv-index-password: ${{secrets.NANODE_PYPI_PASSWORD}}
+          native-tls: true
