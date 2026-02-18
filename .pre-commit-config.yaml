@@ -1,18 +1,25 @@
 repos:
   - repo: https://github.com/dycw/pre-commit-hooks
-    rev: 0.14.138
+    rev: 0.15.12
     hooks:
       - id: add-hooks
         args:
           - --certificates
           - --ci-gitea
           - --ci-pytest-os=ubuntu-latest
+          - --ci-pytest-sops-age-key=${{secrets.SOPS_AGE_KEY}}
+          - --ci-python-index-password-read=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --ci-python-index-password-write=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --ci-token-github=${{secrets.ACTION_TOKEN}}
           - --description=Pre-commit hooks
           - --prettier
           - --python
+          - --python-index-name=nanode
+          - --python-index-password=lending0safety0email
+          - --python-index-url=https://pypi.queensberryresearch.com
+          - --python-index-username=qrt
           - --python-package-name-external=qrt-pre-commit-hooks
           - --python-package-name-internal=qrt-pre-commit-hooks
-          - --python-uv-index=nanode=https://pypi.queensberryresearch.com/simple
           - --python-version=3.13
           - --repo-name=pre-commit-hooks
           - --shell
@@ -24,6 +31,8 @@ repos:
         priority: 40
       - id: format-pre-commit-config
         priority: 30
+      - id: format-pytest
+        priority: 30
       - id: format-requirements
         priority: 30
       - id: replace-sequence-str
@@ -32,36 +41,50 @@ repos:
         priority: 10
       - id: run-uv-lock
         args:
-          - --python-uv-index=nanode=https://pypi.queensberryresearch.com/simple
-          - --certificates
+          - --index-password=lending0safety0email
+          - --index-username=qrt
+          - --index=https://pypi.queensberryresearch.com/simple
+          - --native-tls
         priority: 20
       - id: run-version-bump
         priority: 20
       - id: setup-bump-my-version
         args:
-          - --python-package-name-internal=qrt-pre-commit-hooks
+          - --package-name=qrt-pre-commit-hooks
         priority: 20
       - id: setup-ci-pull-request
         args:
-          - --gitea
-          - --repo-name=pre-commit-hooks
           - --certificates
+          - --gitea
+          - --index-password=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --index-username=qrt
+          - --index=https://pypi.queensberryresearch.com/simple
+          - --pytest-os=ubuntu-latest
+          - --pytest-sops-age-key=${{secrets.SOPS_AGE_KEY}}
           - --python-version=3.13
-          - --ci-pytest-os=ubuntu-latest
+          - --repo-name=pre-commit-hooks
+          - --token-github=${{secrets.ACTION_TOKEN}}
         priority: 20
       - id: setup-ci-push
         args:
-          - --gitea
           - --certificates
-          - --python
+          - --gitea
+          - --package
+          - --package-password=${{secrets.PYPI_NANODE_PASSWORD}}
+          - --package-publish-url=https://pypi.queensberryresearch.com
+          - --package-username=qrt
+          - --token-github=${{secrets.ACTION_TOKEN}}
         priority: 20
       - id: setup-coverage
         priority: 20
       - id: setup-direnv
         args:
-          - --certificates
+          - --index-name=nanode
+          - --index-password=lending0safety0email
+          - --index-username=qrt
+          - --native-tls
           - --python
-          - --python-version=3.13
+          - --version=3.13
         priority: 20
       - id: setup-git
         args:
@@ -72,27 +95,28 @@ repos:
       - id: setup-pyproject
         args:
           - --description=Pre-commit hooks
-          - --python-package-name-external=qrt-pre-commit-hooks
-          - --python-package-name-internal=qrt-pre-commit-hooks
-          - --python-uv-index=nanode=https://pypi.queensberryresearch.com/simple
-          - --python-version=3.13
+          - --index-name=nanode
+          - --index-url=https://pypi.queensberryresearch.com/simple
+          - --name-external=qrt-pre-commit-hooks
+          - --name-internal=qrt-pre-commit-hooks
+          - --version=3.13
         priority: 20
       - id: setup-pyright
         args:
-          - --python-version=3.13
+          - --version=3.13
         priority: 20
       - id: setup-pytest
         args:
-          - --python-package-name-internal=qrt-pre-commit-hooks
+          - --package-name=qrt-pre-commit-hooks
         priority: 20
       - id: setup-readme
         args:
-          - --repo-name=pre-commit-hooks
           - --description=Pre-commit hooks
+          - --repo-name=pre-commit-hooks
         priority: 20
       - id: setup-ruff
         args:
-          - --python-version=3.13
+          - --version=3.13
         priority: 20
       - id: update-ci-action-versions
         priority: 20
@@ -100,35 +124,10 @@ repos:
         priority: 20
       - id: update-requirements
         args:
-          - --python-uv-index=nanode=https://pypi.queensberryresearch.com/simple
-          - --certificates
-        priority: 20
-  - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.4.21
-    hooks:
-      - id: add-qrt-hooks
-        args:
-          - --package=infra
-        priority: 10
-      - id: modify-ci-pull-request
-        args:
-          - --package=infra
-        priority: 20
-      - id: modify-ci-push
-        args:
-          - --package=infra
-        priority: 20
-      - id: modify-direnv
-        args:
-          - --package=infra
-        priority: 20
-      - id: modify-pre-commit
-        args:
-          - --package=infra
-        priority: 10
-      - id: modify-pyproject
-        args:
-          - --package=infra
+          - --index-password=lending0safety0email
+          - --index-username=qrt
+          - --index=https://pypi.queensberryresearch.com/simple
+          - --native-tls
         priority: 20
   - repo: builtin
     hooks:
@@ -167,7 +166,7 @@ repos:
       - id: trailing-whitespace
         priority: 20
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.0
+    rev: v0.15.1
     hooks:
       - id: ruff-check
         args:
@@ -180,13 +179,10 @@ repos:
     hooks:
       - id: taplo-format
         args:
-          - --option
-          - indent_tables=true
-          - --option
-          - indent_entries=true
-          - --option
-          - reorder_keys=true
-        priority: 40
+          - --option=indent_entries=true
+          - --option=indent_tables=true
+          - --option=reorder_keys=true
+        priority: 30
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.11.0
     hooks:

@@ -1,45 +1,52 @@
 packages = [
-  { name = "backfill", type = "trading" },
-  { name = "backtest", type = "trading" },
-  { name = "database", type = "trading" },
-  { name = "engine", type = "trading" },
-  { name = "monitors", type = "trading" },
-  { name = "optimizer", type = "trading" },
-  { name = "qrt-click", type = "trading" },
-  { name = "qrt-ib-async", type = "trading" },
-  { name = "qrt-polars", type = "trading" },
-  { name = "qrt-redis", type = "trading" },
-  { name = "qrt-slack", type = "trading" },
-  { name = "qrt-types", type = "trading" },
-  { name = "qrt-utilities", type = "trading" },
-  { name = "signals", type = "trading" },
-  { name = "test-package", type = "trading" },
-  { name = "testing", type = "trading" },
+  { name = 'backfill', type = 'trading' },
+  { name = 'backtest', type = 'trading' },
+  { name = 'database', type = 'trading' },
+  { name = 'engine', type = 'trading' },
+  { name = 'monitors', type = 'trading' },
+  { name = 'optimizer', type = 'trading' },
+  { name = 'qrt-click', type = 'trading' },
+  { name = 'qrt-ib-async', type = 'trading' },
+  { name = 'qrt-polars', type = 'trading' },
+  { name = 'qrt-redis', type = 'trading' },
+  { name = 'qrt-slack', type = 'trading' },
+  { name = 'qrt-types', type = 'trading' },
+  { name = 'qrt-utilities', type = 'trading' },
+  { name = 'signals', type = 'trading' },
+  { name = 'test-package', type = 'trading' },
+  { name = 'testing', type = 'trading' },
 
-  { name = "backblaze", type = "infra" },
-  { name = "gitea", type = "infra" },
-  { name = "gitea-runner", type = "infra" },
-  { name = "ib-gateway-docker", type = "infra" },
-  { name = "infra-postgres", type = "infra" },
-  { name = "infra-redis", type = "infra" },
-  { name = "infra-utilities", type = "infra" },
-  { name = "mount", type = "infra" },
-  { name = "nanode", type = "infra" },
-  { name = "proxmox", type = "infra" },
+  { name = 'backblaze', type = 'infra' },
+  { name = 'gitea', type = 'infra' },
+  { name = 'gitea-runner', type = 'infra' },
+  { name = 'ib-gateway-docker', type = 'infra' },
+  { name = 'infra-postgres', type = 'infra' },
+  { name = 'infra-redis', type = 'infra' },
+  { name = 'infra-utilities', type = 'infra' },
+  { name = 'mount', type = 'infra' },
+  { name = 'nanode', type = 'infra' },
+  { name = 'proxmox', type = 'infra' },
+  { name = 'qrt-pre-commit-hooks', type = 'infra' },
 ]
-url = "https://github.com/queensberry-research/pre-commit-hooks"
+url = 'https://github.com/queensberry-research/pre-commit-hooks'
+
+
+[gitea]
+  host = 'gitea.qrt'
+  owner = 'qrt'
+  port = 3000
 
 
 [indexes]
   [indexes.gitea]
-    publish_url = "https://gitea.qrt:3000/api/packages/qrt/pypi"
-    username = "qrt-bot"
+    url_tmpl = 'https://${host}:${port}/api/packages/${owner}/pypi'
+    username = 'qrt-bot'
 
     [indexes.gitea.passwords]
-      publish = "91e7f1608190d16c80aa4e5070a22939adccb699"
-      read = "e43d1df41a3ecf96e4adbaf04e98cfaf094d253e"
+      read = 'e43d1df41a3ecf96e4adbaf04e98cfaf094d253e'
+      write = '91e7f1608190d16c80aa4e5070a22939adccb699'
 
   [indexes.nanode]
-    password = "lending0safety0email"
-    publish_url = "https://pypi.queensberryresearch.com"
-    username = "qrt"
+    password = 'lending0safety0email'
+    url = 'https://pypi.queensberryresearch.com'
+    username = 'qrt'

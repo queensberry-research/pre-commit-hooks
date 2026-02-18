@@ -5,16 +5,15 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from click import command
-from pre_commit_hooks.constants import PYPROJECT_TOML, paths_argument
+from pre_commit_hooks.click import paths_argument
+from pre_commit_hooks.constants import PYPROJECT_TOML
 from pre_commit_hooks.utilities import (
-    ensure_contains,
     get_set_table,
     merge_paths,
     run_all_maybe_raise,
     yield_tool_uv,
-    yield_tool_uv_index,
 )
-from tomlkit import inline_table, table
+from tomlkit import inline_table
 from utilities.click import CONTEXT_SETTINGS
 from utilities.core import is_pytest
 from utilities.types import PathLike
@@ -28,7 +27,6 @@ if TYPE_CHECKING:
 
     from utilities.types import PathLike
 
-    from qrt_pre_commit_hooks._enums import Index
     from qrt_pre_commit_hooks._settings import Package
 
 
@@ -47,24 +45,8 @@ def cli(*, paths: tuple[Path, ...], package: Package) -> None:
 
 def _run(package: Package, /, *, path: PathLike = PYPROJECT_TOML) -> bool:
     modifications: set[Path] = set()
-    _add_index(package.pkg_index, path=path, modifications=modifications)
     _add_sources(package, path=path, modifications=modifications)
     return len(modifications) == 0
-
-
-def _add_index(
-    index: Index,
-    /,
-    *,
-    path: PathLike = PYPROJECT_TOML,
-    modifications: MutableSet[Path] | None = None,
-) -> None:
-    with yield_tool_uv_index(path, modifications=modifications) as indexes:
-        tab = table()
-        tab["explicit"] = True
-        tab["name"] = index.value
-        tab["url"] = SETTINGS.indexes.get_read_url(index)
-        ensure_contains(indexes, tab)
 
 
 def _add_sources(

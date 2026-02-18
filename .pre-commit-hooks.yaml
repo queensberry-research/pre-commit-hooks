@@ -4,12 +4,6 @@
   language: python
   files: ^\.pre-commit-config\.yaml$
 
-- id: modify-ci-pull-request
-  name: modify-ci-pull-request
-  entry: modify-ci-pull-request
-  language: python
-  files: ^(\.pre-commit-config\.yaml|\.gitea/workflows/pull-request\.yaml)$
-
 - id: modify-ci-push
   name: modify-ci-push
   entry: modify-ci-push

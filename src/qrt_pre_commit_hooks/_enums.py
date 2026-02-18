@@ -9,6 +9,16 @@ class Index(StrEnum):
     gitea = "gitea"
     nanode = "nanode"
 
+    @property
+    def package(self) -> Package:
+        match self:
+            case Index.gitea:
+                return Package.trading
+            case Index.nanode:
+                return Package.infra
+            case never:
+                assert_never(never)
+
 
 @unique
 class Package(StrEnum):

@@ -6,7 +6,7 @@ from utilities.constants import HOUR
 from utilities.pytest import throttle_test
 from utilities.subprocess import run
 
-from qrt_pre_commit_hooks._enums import Package
+from qrt_pre_commit_hooks._enums import Index, Package
 
 
 class TestCLI:
@@ -18,13 +18,8 @@ class TestCLI:
                 [str(PRE_COMMIT_CONFIG_YAML), "--package", Package.trading.value],
             ),
             param(
-                "modify-ci-pull-request",
-                [str(PRE_COMMIT_CONFIG_YAML), "--package", Package.trading.value],
-            ),
-            param("modify-ci-push", [str(PRE_COMMIT_CONFIG_YAML)]),
-            param(
                 "modify-ci-push",
-                [str(PRE_COMMIT_CONFIG_YAML), "--package", Package.trading.value],
+                [str(PRE_COMMIT_CONFIG_YAML), "--index", Index.gitea.value],
             ),
             param("modify-direnv", [str(ENVRC)]),
             param("modify-direnv", [str(ENVRC), "--package", Package.trading.value]),

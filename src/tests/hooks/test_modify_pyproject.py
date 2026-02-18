@@ -16,11 +16,6 @@ class TestModifyPyProject:
     def test_main(self, *, tmp_path: Path) -> None:
         path = tmp_path / PYPROJECT_TOML
         exp_output = normalize_multi_line_str(r"""
-            [[tool.uv.index]]
-            explicit = true
-            name = "gitea"
-            url = "https://gitea.qrt:3000/api/packages/qrt/pypi/simple"
-
             [tool.uv.sources]
             backfill = {index = "gitea"}
             backtest = {index = "gitea"}

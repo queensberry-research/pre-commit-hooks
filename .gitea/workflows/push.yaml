@@ -13,7 +13,7 @@ jobs:
         uses: dycw/action-tag-commit@latest
         with:
           token-github: ${{secrets.ACTION_TOKEN}}
-  publish:
+  publish-package:
     runs-on: ubuntu-latest
     steps:
       - name: Update CA certificates
@@ -21,21 +21,21 @@ jobs:
       - name: Build and publish the package
         uses: dycw/action-publish-package@latest
         with:
+          publish_url: https://pypi.queensberryresearch.com
           native-tls: true
+          token-github: ${{secrets.ACTION_TOKEN}}
+          password: ${{secrets.PYPI_NANODE_PASSWORD}}
+          username: qrt
+  publish-package-gitea:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update CA certificates
+        run: sudo update-ca-certificates
+      - name: Build and publish the package
+        uses: dycw/action-publish-package@latest
+        with:
           token-github: ${{secrets.ACTION_TOKEN}}
           username: qrt-bot
           password: ${{secrets.PYPI_GITEA_READ_WRITE_TOKEN}}
-          publish-url: https://gitea.qrt:3000/api/packages/qrt/pypi
-  publish-nanode:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update CA certificates
-        run: sudo update-ca-certificates
-      - name: Build and publish the package
-        uses: dycw/action-publish-package@latest
-        with:
-          token-github: ${{secrets.ACTION_TOKEN}}
-          username: qrt
-          password: ${{secrets.PYPI_NANODE_PASSWORD}}
-          publish-url: https://pypi.queensberryresearch.com
+          publish_url: https://gitea.qrt:3000/api/packages/qrt/pypi
           native-tls: true

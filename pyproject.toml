@@ -2,37 +2,39 @@
   build-backend = "uv_build"
   requires = ["uv_build"]
 
+
 [dependency-groups]
-  dev = ["dycw-utilities[test]>=0.191.0", "pyright>=1.1.408"]
+  dev = ["dycw-utilities[test]>=0.191.7", "pyright>=1.1.408"]
+
 
 [project]
   dependencies = [
     "click>=8.3.1",
-    "dycw-pre-commit-hooks>=0.14.138",
-    "dycw-utilities>=0.191.0",
-    "pydantic-settings>=2.12.0",
+    "dycw-pre-commit-hooks>=0.15.12",
+    "dycw-utilities>=0.191.7",
+    "pydantic-settings>=2.13.0",
   ]
   description = "Pre-commit hooks"
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.4.23"
+  version = "0.5.0"
 
   [project.optional-dependencies]
     cli = [
       "click==8.3.1",
-      "dycw-pre-commit-hooks==0.14.138",
-      "dycw-utilities==0.191.0",
-      "pydantic-settings==2.12.0",
+      "dycw-pre-commit-hooks==0.15.12",
+      "dycw-utilities==0.191.7",
+      "pydantic-settings==2.13.0",
     ]
 
   [project.scripts]
     add-qrt-hooks = "qrt_pre_commit_hooks.hooks._add_qrt_hooks:cli"
-    modify-ci-pull-request = "qrt_pre_commit_hooks.hooks._modify_ci_pull_request:cli"
     modify-ci-push = "qrt_pre_commit_hooks.hooks._modify_ci_push:cli"
     modify-direnv = "qrt_pre_commit_hooks.hooks._modify_direnv:cli"
     modify-pre-commit = "qrt_pre_commit_hooks.hooks._modify_pre_commit:cli"
     modify-pyproject = "qrt_pre_commit_hooks.hooks._modify_pyproject:cli"
+
 
 [tool]
   [tool.uv]
@@ -48,10 +50,12 @@
     [tool.uv.sources]
       backblaze = { index = "nanode" }
       gitea = { index = "nanode" }
+      gitea-runner = { index = "nanode" }
       ib-gateway-docker = { index = "nanode" }
+      infra-postgres = { index = "nanode" }
       infra-redis = { index = "nanode" }
       infra-utilities = { index = "nanode" }
       mount = { index = "nanode" }
       nanode = { index = "nanode" }
-      postgres = { index = "nanode" }
       proxmox = { index = "nanode" }
+      qrt-pre-commit-hooks = { index = "nanode" }
