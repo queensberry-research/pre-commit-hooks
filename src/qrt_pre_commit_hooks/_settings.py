@@ -16,9 +16,9 @@ from utilities.pydantic_settings import (
 from utilities.types import SecretLike
 
 from qrt_pre_commit_hooks._constants import (
-    PYPI_GITEA_READ_TOKEN,
-    PYPI_GITEA_READ_WRITE_TOKEN,
-    PYPI_NANODE_PASSWORD,
+    GITEA_READ_TOKEN,
+    GITEA_READ_WRITE_TOKEN,
+    NANODE_PYPI_PASSWORD,
 )
 from qrt_pre_commit_hooks._enums import Index, Package
 
@@ -73,15 +73,15 @@ class _IndexesSettings(BaseSettings):
             case Index.gitea, False, False:
                 return self.gitea.passwords.read
             case Index.gitea, False, True:
-                return PYPI_GITEA_READ_TOKEN
+                return GITEA_READ_TOKEN
             case Index.gitea, True, False:
                 return self.gitea.passwords.write
             case Index.gitea, True, True:
-                return PYPI_GITEA_READ_WRITE_TOKEN
+                return GITEA_READ_WRITE_TOKEN
             case Index.nanode, _, False:
                 return self.nanode.password
             case Index.nanode, _, True:
-                return PYPI_NANODE_PASSWORD
+                return NANODE_PYPI_PASSWORD
             case never:
                 assert_never(never)
 

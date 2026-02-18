@@ -13,16 +13,16 @@ from qrt_pre_commit_hooks._click import (
 )
 from qrt_pre_commit_hooks._constants import (
     ACTION_TOKEN,
-    PYPI_GITEA_READ_TOKEN,
-    PYPI_GITEA_READ_WRITE_TOKEN,
-    PYPI_NANODE_PASSWORD,
+    GITEA_READ_TOKEN,
+    GITEA_READ_WRITE_TOKEN,
+    NANODE_PYPI_PASSWORD,
     SOPS_AGE_KEY,
 )
 from qrt_pre_commit_hooks._enums import Index, Package
 from qrt_pre_commit_hooks._settings import SETTINGS
 from qrt_pre_commit_hooks._utilities import yield_job_with
 
-__version__ = "0.5.3"
+__version__ = "0.5.4"
 
 
 set_up_logging(__name__, files=".logs", log_version=__version__)
@@ -33,9 +33,9 @@ sys.excepthook = make_except_hook(
 
 __all__ = [
     "ACTION_TOKEN",
-    "PYPI_GITEA_READ_TOKEN",
-    "PYPI_GITEA_READ_WRITE_TOKEN",
-    "PYPI_NANODE_PASSWORD",
+    "GITEA_READ_TOKEN",
+    "GITEA_READ_WRITE_TOKEN",
+    "NANODE_PYPI_PASSWORD",
     "SETTINGS",
     "SOPS_AGE_KEY",
     "Index",
