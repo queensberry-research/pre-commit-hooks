@@ -23,10 +23,10 @@ packages = [
   { name = 'infra-postgres', type = 'infra' },
   { name = 'infra-redis', type = 'infra' },
   { name = 'infra-utilities', type = 'infra' },
-  { name = 'linode', type = 'infra' },
   { name = 'mount', type = 'infra' },
   { name = 'nanode', type = 'infra' },
   { name = 'proxmox', type = 'infra' },
+  { name = 'qrt-linode', type = 'infra' },
   { name = 'qrt-pre-commit-hooks', type = 'infra' },
   { name = 'swarm', type = 'infra' },
 ]
