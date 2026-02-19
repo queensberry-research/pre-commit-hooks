@@ -13,8 +13,8 @@ from pre_commit_hooks.utilities import (
     merge_paths,
     run_all,
     run_all_maybe_raise,
-    yield_toml_doc,
 )
+from tomlkit.api import loads
 from utilities.click import CONTEXT_SETTINGS, to_args
 from utilities.core import OneEmptyError, is_pytest, one
 from utilities.types import PathLike
@@ -140,12 +140,15 @@ def _add_setup_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
 
 def _get_package(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> Package | None:
     path_use = one(merge_paths(path, target=PYPROJECT_TOML))
-    with yield_toml_doc(path_use) as doc:
-        try:
-            project = get_table(doc, "project")
-            name = project["name"]
-        except KeyError:
-            return None
+    try:
+        doc = loads(path_use.read_text())
+    except FileNotFoundError:
+        return None
+    try:
+        project = get_table(doc, "project")
+        name = project["name"]
+    except KeyError:
+        return None
     try:
         return one(p.type for p in SETTINGS.packages if p.name == name)
     except OneEmptyError:
@@ -154,11 +157,14 @@ def _get_package(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> Package | None:
 
 def _need_docker(*, path: PathLike = PRE_COMMIT_CONFIG_YAML) -> bool:
     path_use = one(merge_paths(path, target=PYPROJECT_TOML))
-    with yield_toml_doc(path_use) as doc:
-        try:
-            project = get_table(doc, "project")
-            scripts = get_table(project, "scripts")
-            name = project["name"]
-        except KeyError:
-            return False
+    try:
+        doc = loads(path_use.read_text())
+    except FileNotFoundError:
+        return False
+    try:
+        project = get_table(doc, "project")
+        scripts = get_table(project, "scripts")
+        name = project["name"]
+    except KeyError:
+        return False
     return f"{name}-cli" in scripts

@@ -18,7 +18,7 @@
   name = "qrt-pre-commit-hooks"
   readme = "README.md"
   requires-python = ">= 3.13"
-  version = "0.5.20"
+  version = "0.5.21"
 
   [project.optional-dependencies]
     cli = [
@@ -56,6 +56,7 @@
       infra-postgres = { index = "nanode" }
       infra-redis = { index = "nanode" }
       infra-utilities = { index = "nanode" }
+      linode = { index = "nanode" }
       mount = { index = "nanode" }
       nanode = { index = "nanode" }
       proxmox = { index = "nanode" }
