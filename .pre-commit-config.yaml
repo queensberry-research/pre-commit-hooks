@@ -131,7 +131,7 @@ repos:
           - --native-tls
         priority: 20
   - repo: https://github.com/queensberry-research/pre-commit-hooks
-    rev: 0.5.20
+    rev: 0.5.21
     hooks:
       - id: add-qrt-hooks
         priority: 10

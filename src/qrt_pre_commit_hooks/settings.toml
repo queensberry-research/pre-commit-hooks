@@ -28,6 +28,7 @@ packages = [
   { name = 'nanode', type = 'infra' },
   { name = 'proxmox', type = 'infra' },
   { name = 'qrt-pre-commit-hooks', type = 'infra' },
+  { name = 'swarm', type = 'infra' },
 ]
 
 
