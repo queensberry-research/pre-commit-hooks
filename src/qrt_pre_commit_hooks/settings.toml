@@ -25,6 +25,7 @@ packages = [
   { name = 'infra-utilities', type = 'infra' },
   { name = 'mount', type = 'infra' },
   { name = 'nanode', type = 'infra' },
+  { name = 'openclaw-admin', type = 'infra' },
   { name = 'proxmox', type = 'infra' },
   { name = 'qrt-linode', type = 'infra' },
   { name = 'qrt-pre-commit-hooks', type = 'infra' },
